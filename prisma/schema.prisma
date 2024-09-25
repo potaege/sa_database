@@ -1,0 +1,135 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource easy_service {
+  provider     = "postgresql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+// Local tables
+model Users {
+  id            String            @id @default(uuid())
+  username      String
+  password      String
+  name          String
+  surname       String
+  address       String
+  province      String
+  role          String
+  Works         Works?
+  movedItems    Transaction_log[] @relation("UserLog") // Logs where the user moved the item
+  receivedItems Transaction_log[] @relation("FromUserLog") // Logs where the item was moved from this user
+}
+
+model Spare_parts {
+  id                   Int                    @id @default(autoincrement())
+  name                 String
+  description          String
+  Spare_parts_requests Spare_parts_requests[]
+  Transaction_log      Transaction_log?
+}
+
+model Customers {
+  id           Int       @id @default(autoincrement())
+  name         String
+  surname      String
+  credit_limit Float
+  address      String
+  tax_id       String
+  tel          String
+  province     String
+  Works        Works[]
+  Invoices     Invoices?
+}
+
+model Works {
+  id           String    @id @default(cuid())
+  mail_date    DateTime
+  service_Date DateTime
+  status       Int
+  user_id      Users     @relation(fields: [userID], references: [id])
+  customer_id  Customers @relation(fields: [customerID], references: [id])
+
+  userID     String     @unique
+  customerID Int        @unique
+  Quotation  Quotation?
+  Invoices   Invoices?
+  PO         PO?
+}
+
+model Quotation {
+  id             String   @id @default(cuid())
+  date           DateTime
+  contact_person String
+  delivery_to    String
+  delivery_on    DateTime
+  payment_term   String
+  work_id        Works    @relation(fields: [workID], references: [id])
+
+  workID String @unique
+}
+
+model Invoices {
+  id          String    @id @default(cuid())
+  date        DateTime
+  due_date    DateTime
+  customer_id Customers @relation(fields: [customerID], references: [id])
+  work_id     Works     @relation(fields: [workID], references: [id])
+  // po_ref
+
+  customerID Int    @unique
+  workID     String @unique
+}
+
+model PO {
+  id      String   @id @default(cuid())
+  work_id Works    @relation(fields: [workID], references: [id])
+  date    DateTime
+
+  workID String @unique
+}
+
+model Requests {
+  id                   Int                    @id @default(autoincrement())
+  model                String
+  sn                   String
+  type                 String
+  rated                String
+  description          String
+  warranty             Boolean
+  Spare_parts_requests Spare_parts_requests[]
+}
+
+model Spare_parts_requests {
+  id              Int          @id @default(autoincrement())
+  spare_parts_qty Int
+  spare_parts_id  Spare_parts? @relation(fields: [sparePartID], references: [id])
+  request_id      Requests?    @relation(fields: [requestID], references: [id])
+
+  sparePartID Int @unique
+  requestID   Int @unique
+}
+
+model Transaction_log {
+  id            Int         @id @default(autoincrement())
+  quantity      Int
+  status        Int
+  spare_part_id Spare_parts @relation(fields: [sparePartID], references: [id])
+  user_id       Users       @relation("UserLog", fields: [userID], references: [id])
+  rom_user_idf  Users       @relation("FromUserLog", fields: [fromUserID], references: [id])
+
+  sparePartID Int    @unique
+  userID      String
+  fromUserID  String
+
+  @@index([userID])
+  @@index([fromUserID])
+}
