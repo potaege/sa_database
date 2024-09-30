@@ -33,17 +33,18 @@ model Spare_parts {
 }
 
 model Customers {
-  id           Int       @id @default(autoincrement())
-  name         String
-  surname      String
+  id           Int     @id @default(autoincrement())
+  name         String?
+  surname      String?
+  company_name String?
   credit_limit Float
   address      String
   tax_id       String
   tel          String
-  province     String
-  addDate      DateTime  @default(now())
-  Works        Works[]
-  Invoices     Invoices?
+
+  addDate  DateTime   @default(now())
+  Works    Works[]
+  Invoices Invoices[]
 }
 
 model Works {
@@ -53,7 +54,10 @@ model Works {
   status       Int
   userID       String     @unique
   customerID   Int        @unique
+  address      String
+  province     String
   addDate      DateTime   @default(now())
+  inWarranty   Boolean
   user_id      Users      @relation(fields: [userID], references: [id])
   customer_id  Customers  @relation(fields: [customerID], references: [id])
   Quotation    Quotation?
@@ -62,15 +66,15 @@ model Works {
 }
 
 model Quotation {
-  id             String   @id @default(cuid())
+  id             String    @id @default(cuid())
   date           DateTime
   contact_person String
   delivery_to    String
-  delivery_on    DateTime
+  delivery_on    DateTime?
   payment_term   String
-  workID         String   @unique
-  addDate        DateTime @default(now())
-  work_id        Works    @relation(fields: [workID], references: [id])
+  workID         String    @unique
+  addDate        DateTime  @default(now())
+  work_id        Works     @relation(fields: [workID], references: [id])
 }
 
 model Invoices {

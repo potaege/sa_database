@@ -8,7 +8,7 @@ app.get("/getByID:id", async (id) => {
 });
 
 app.get("/getList", async () => {
-  return await db.$queryRaw`SELECT * FROM "spare_parts";`;
+  return await db.$queryRaw`SELECT "id", FROM "spare_parts";`;
 });
 // TODO List
 
