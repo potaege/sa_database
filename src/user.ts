@@ -5,6 +5,7 @@ import { password } from "bun";
 const app = new Elysia({ prefix: "/user" });
 
 interface NewUserBody {
+  id: string;
   username: string;
   password: string;
   name: string;
@@ -23,28 +24,22 @@ app.get("/getUserList", async () => {
 });
 
 app.get("/getUserListWithFilterRole/:role", async (role) => {
-  return await db.$queryRaw`SELECT "id","username","name","surname","address","province" FROM "Users" WHERE "role" like ${role};`;
+  return await db.$queryRaw`SELECT "id","username","name","surname","address","province","role" FROM "Users" WHERE "role" like ${role};`;
 });
 
 app.get("/login/:username/:password", async ({ params }) => {
   return await db.$queryRaw`SELECT "id" FROM "Users" WHERE "username" like ${params.username} AND "password" like ${params.password};`;
 });
 
-app.get("/getUserListWithFilterProvince", async () => {
-  return;
+app.get("/getUserListWithFilterProvince", async (province) => {
+  return await db.$queryRaw`SELECT "id","username","name","surname","address","province","rold" FROM "Users" WHERE "province" like ${province}`;
 });
 
-//TODO List
-
-// Insert user ใหม่
-// แก้ไขข้อมูล user
-
-// ใช้ interface ในพารามิเตอร์ของฟังก์ชัน
 app.post("/addNewUser", async ({ body }: { body: NewUserBody }) => {
   try {
     const { username, password, name, surname, address, province, role } = body;
 
-    await db.$queryRaw`INSERT INTO "Users"`;
+    await db.$queryRaw`INSERT INTO "Users" ("username","password","name","surname","address","province","role") VALUES (${username},${password},${name},${surname},${address},${province},${role})`;
 
     return "add new users";
   } catch (error: any) {
@@ -55,49 +50,22 @@ app.post("/addNewUser", async ({ body }: { body: NewUserBody }) => {
   }
 });
 
-// Example
+app.post("/editUser", async ({ body }: { body: NewUserBody }) => {
+  try {
+    const { id, username, password, name, surname, address, province, role } =
+      body;
 
-// app.post("/sign-up", async ({ body }) =>
-//   db.users.create({
-//     data: body,
-//   })
-// );
+    await db.$queryRaw`UPDATE "Users" SET "username" = ${username}, "password" = ${password},"name" = ${name},"surname" = ${surname},"address" = ${address},"province" = ${province},"role" = ${role}`;
 
-// app.get("/", async () => {
-//   return await db.$queryRaw`SELECT * FROM "User";`;
-// });
+    return "editing users data";
+  } catch (error: any) {
+    return {
+      error: "Error while editing user data",
+      details: error.message,
+    };
+  }
+});
 
-// app.get("/insert/:username/:password", async ({ params }) => {
-//   if (params.password.length < 8) {
-//     return "password too short (8 minimum)";
-//   }
-
-//   try {
-//     const data = await db.$queryRaw`INSERT INTO "User" ("username","password")
-//     VALUES (${params.username},${params.password})
-//     RETURNING *;
-//     `;
-//     return data;
-//   } catch (error: any) {
-//     console.log(error);
-//     if (error.code == "P2010") {
-//       return "duplicate username code : " + error.code;
-//     }
-//     return error.code;
-//   }
-// });
-
-// app.get("/login/:username/:password", async ({ params }) => {
-//   console.log(typeof params.username)
-//   const data = await db.$queryRaw`SELECT * FROM "User" WHERE "username" = ${params.username} AND "password" = ${params.password};`;
-//   if (data.length == 0){
-//     return "Wrong password"
-//   }
-//   return data
-// });
-
-// app.get("/edit", async ({ params }) => {
-//   return "constructing....";
-// });
+//TODO List
 
 export default app;

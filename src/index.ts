@@ -3,7 +3,9 @@ import user from "./user";
 import auth from "./auth";
 import spare_parts from "./spare_parts";
 import customers from "./customers";
-const app = new Elysia();
+import { swagger } from "@elysiajs/swagger";
+
+const app = new Elysia().use(swagger());
 
 app.use(auth);
 app.use(user);
