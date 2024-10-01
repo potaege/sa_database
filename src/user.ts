@@ -4,6 +4,16 @@ import { password } from "bun";
 
 const app = new Elysia({ prefix: "/user" });
 
+interface NewUserBody {
+  username: string;
+  password: string;
+  name: string;
+  surname: string;
+  address: string;
+  province: string;
+  role: string;
+}
+
 app.get("/searchbyID/:id", async (id) => {
   return await db.$queryRaw`SELECT "id","username","name","surname","address","province","role" FROM "Users" WHERE "id" like ${id};`;
 });
@@ -29,13 +39,21 @@ app.get("/getUserListWithFilterProvince", async () => {
 // Insert user ใหม่
 // แก้ไขข้อมูล user
 
-// app.post("/addNewUser", async ({ body }) => {
-//   db.users.create({
-//     data: {
-//       username: "test",
-//     },
-//   });
-// });
+// ใช้ interface ในพารามิเตอร์ของฟังก์ชัน
+app.post("/addNewUser", async ({ body }: { body: NewUserBody }) => {
+  try {
+    const { username, password, name, surname, address, province, role } = body;
+
+    await db.$queryRaw`INSERT INTO "Users"`;
+
+    return "add new users";
+  } catch (error: any) {
+    return {
+      error: "Error while creating user",
+      details: error.message,
+    };
+  }
+});
 
 // Example
 

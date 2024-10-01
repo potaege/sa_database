@@ -25,7 +25,7 @@ model Users {
 
 model Spare_parts {
   id                   Int                    @id @default(autoincrement())
-  name                 String
+  name                 String                 @unique()
   description          String
   addDate              DateTime               @default(now())
   Spare_parts_requests Spare_parts_requests[]
