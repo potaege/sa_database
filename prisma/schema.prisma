@@ -49,32 +49,32 @@ model Customers {
 }
 
 model Works {
-  id           String      @id @default(cuid())
+  id           String       @id @default(cuid())
   mail_date    DateTime
   service_Date DateTime?
   status       Int
-  userID       String      @unique
-  customerID   Int         @unique
+  userID       String       @unique
+  customerID   Int          @unique
   address      String
   province     String
-  addDate      DateTime    @default(now())
-  user_id      Users?      @relation(fields: [userID], references: [id])
-  customer_id  Customers   @relation(fields: [customerID], references: [id])
-  Quotation    Quotation[]
-  Invoices     Invoices[]
-  PO           PO[]
+  addDate      DateTime     @default(now())
+  user_id      Users?       @relation(fields: [userID], references: [id])
+  customer_id  Customers    @relation(fields: [customerID], references: [id])
+  quotations   Quotations[]
+  invoices     Invoices[]
+  po           PO[]
   Requests     Requests[]
 }
 
 model AdditionalCost {
-  id           Int       @id @default(autoincrement())
+  id           Int        @id @default(autoincrement())
   description  String
   cost         Float
-  quotationID  String    @unique
-  quotation_id Quotation @relation(fields: [quotationID], references: [id])
+  quotationID  String     @unique
+  quotation_id Quotations @relation(fields: [quotationID], references: [id])
 }
 
-model Quotation {
+model Quotations {
   id              String           @id @default(cuid())
   date            DateTime
   contact_person  String

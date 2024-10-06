@@ -8,9 +8,9 @@ app.get("/getByID/:id", async (id: string) => {
 });
 
 app.get(
-  "/getIDbynameAndSurname/:name/:surname",
-  async (name: string, surname: string) => {
-    return await db.$queryRaw`SELECT "id" FROM "customers" WHERE name like ${name} AND surname like ${surname}`;
+  "/getIDbynameAndSurnameOrCompanyName/:name/:surname/:company_name",
+  async (name: string, surname: string, company_name: string) => {
+    return await db.$queryRaw`SELECT "id" FROM "customers" WHERE company_name like ${company_name} OR (name like ${name} AND surname like ${surname}) `;
   }
 );
 
