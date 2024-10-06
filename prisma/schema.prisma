@@ -9,28 +9,30 @@ datasource easy_service {
 }
 
 model Users {
-  id            String            @id @default(uuid())
-  username      String
-  password      String
-  name          String
-  surname       String
-  address       String
-  province      String
-  role          String
-  addDate       DateTime          @default(now())
-  works         Works[]
-  movedItems    Transaction_log[] @relation("UserLog")
-  receivedItems Transaction_log[] @relation("FromUserLog")
+  id                    String                  @id @default(uuid())
+  username              String
+  password              String
+  name                  String
+  surname               String
+  address               String
+  province              String
+  role                  String
+  addDate               DateTime                @default(now())
+  works                 Works[]
+  movedItems            Transaction_log[]       @relation("UserLog")
+  receivedItems         Transaction_log[]       @relation("FromUserLog")
+  Spare_parts_engineers Spare_parts_engineers[]
 }
 
 model Spare_parts {
-  id                   Int                    @id @default(autoincrement())
-  name                 String                 @unique()
-  description          String
-  price                Float
-  addDate              DateTime               @default(now())
-  Spare_parts_requests Spare_parts_requests[]
-  Transaction_log      Transaction_log?
+  id                    Int                    @id @default(autoincrement())
+  name                  String                 @unique()
+  description           String
+  price                 Float
+  addDate               DateTime               @default(now())
+  Spare_parts_requests  Spare_parts_requests[]
+  Transaction_log       Transaction_log?
+  Spare_parts_engineers Spare_parts_engineers?
 }
 
 model Customers {
@@ -149,4 +151,14 @@ model Transaction_log {
   spare_part_id Spare_parts @relation(fields: [sparePartID], references: [id])
   user_id       Users       @relation("UserLog", fields: [userID], references: [id])
   rom_user_idf  Users       @relation("FromUserLog", fields: [fromUserID], references: [id])
+}
+
+model Spare_parts_engineers {
+  id            Int    @id @default(autoincrement())
+  spare_part_id Int    @unique
+  engineer_id   String @unique
+  quantity      Int
+
+  engineer   Users       @relation(fields: [engineer_id], references: [id])
+  spare_part Spare_parts @relation(fields: [spare_part_id], references: [id])
 }
