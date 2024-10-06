@@ -54,7 +54,8 @@ app.post("/editUser", async ({ body }: { body: User }) => {
     const { id, username, password, name, surname, address, province, role } =
       body;
 
-    await db.$queryRaw`UPDATE "Users" SET "username" = ${username}, "password" = ${password},"name" = ${name},"surname" = ${surname},"address" = ${address},"province" = ${province},"role" = ${role}`;
+    await db.$queryRaw`UPDATE "Users" SET "username" = ${username}, "password" = ${password},"name" = ${name},"surname" = ${surname},"address" = ${address},"province" = ${province},"role" = ${role}
+    WHERE "id" like id`;
 
     return "editing users data";
   } catch (error: any) {
