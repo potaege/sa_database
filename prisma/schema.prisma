@@ -120,7 +120,6 @@ model Requests {
   sn                   String
   type                 String
   rated                String
-  description          String
   warranty             Boolean
   workID               String
   addedDate            DateTime               @default(now())
@@ -134,6 +133,8 @@ model Spare_parts_requests {
   id              Int         @id @default(autoincrement())
   spare_parts_qty Int
   sparePartID     Int         @unique
+  description     String
+  sn              String?
   requestID       Int         @unique
   addedDate       DateTime    @default(now())
   spare_parts_id  Spare_parts @relation(fields: [sparePartID], references: [id])
