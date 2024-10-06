@@ -37,9 +37,7 @@ model Spare_parts {
 
 model Customers {
   id           Int        @id @default(autoincrement())
-  name         String?
-  surname      String?
-  company_name String?
+  name         String
   credit_limit Float
   address      String
   tax_id       String?
