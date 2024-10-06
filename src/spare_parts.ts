@@ -3,7 +3,7 @@ import db from "./db";
 
 const app = new Elysia({ prefix: "/spare_parts" });
 
-interface SpareParts {
+interface SparePart {
   id: number;
   name: string;
   description: string;
@@ -17,7 +17,7 @@ app.get("/getList", async () => {
   return await db.$queryRaw`SELECT "id", FROM "spare_parts";`;
 });
 
-app.post("/insertSpareParts", async ({ body }: { body: SpareParts }) => {
+app.post("/insertSparePart", async ({ body }: { body: SparePart }) => {
   try {
     const { name, description } = body;
 
@@ -31,7 +31,7 @@ app.post("/insertSpareParts", async ({ body }: { body: SpareParts }) => {
   }
 });
 
-app.post("/editSpareParts", async ({ body }: { body: SpareParts }) => {
+app.post("/editSparePart", async ({ body }: { body: SparePart }) => {
   try {
     const { id, name, description } = body;
 

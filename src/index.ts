@@ -3,6 +3,7 @@ import user from "./user";
 import auth from "./auth";
 import spare_parts from "./spare_parts";
 import customers from "./customers";
+import work from "./work";
 import { swagger } from "@elysiajs/swagger";
 
 const app = new Elysia().use(swagger());
@@ -11,6 +12,7 @@ app.use(auth);
 app.use(user);
 app.use(spare_parts);
 app.use(customers);
+app.use(work);
 app.listen(3000);
 
 console.log(

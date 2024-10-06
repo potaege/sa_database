@@ -1,10 +1,9 @@
 import { Elysia } from "elysia";
 import db from "./db";
-import { password } from "bun";
 
 const app = new Elysia({ prefix: "/user" });
 
-interface NewUserBody {
+interface User {
   id: string;
   username: string;
   password: string;
@@ -35,7 +34,7 @@ app.get("/getUserListWithFilterProvince", async (province) => {
   return await db.$queryRaw`SELECT "id","username","name","surname","address","province","rold" FROM "Users" WHERE "province" like ${province}`;
 });
 
-app.post("/addNewUser", async ({ body }: { body: NewUserBody }) => {
+app.post("/addNewUser", async ({ body }: { body: User }) => {
   try {
     const { username, password, name, surname, address, province, role } = body;
 
@@ -50,7 +49,7 @@ app.post("/addNewUser", async ({ body }: { body: NewUserBody }) => {
   }
 });
 
-app.post("/editUser", async ({ body }: { body: NewUserBody }) => {
+app.post("/editUser", async ({ body }: { body: User }) => {
   try {
     const { id, username, password, name, surname, address, province, role } =
       body;
