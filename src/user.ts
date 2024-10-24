@@ -23,15 +23,15 @@ app.get("/getUserList", async () => {
 });
 
 app.get("/getUserListWithFilterRole/:role", async (role) => {
-  return await db.$queryRaw`SELECT "id","username","name","surname","address","province","role" FROM "Users" WHERE "role" like ${role};`;
+  return await db.$queryRaw`SELECT "id","username","name","surname","address","province","role" FROM "Users" WHERE "role" = ${role};`;
 });
 
 app.get("/login/:username/:password", async ({ params }) => {
-  return await db.$queryRaw`SELECT "id" FROM "Users" WHERE "username" like ${params.username} AND "password" like ${params.password};`;
+  return await db.$queryRaw`SELECT "id" FROM "Users" WHERE "username" = ${params.username} AND "password" = ${params.password};`;
 });
 
 app.get("/getUserListWithFilterProvince", async (province) => {
-  return await db.$queryRaw`SELECT "id","username","name","surname","address","province","rold" FROM "Users" WHERE "province" like ${province}`;
+  return await db.$queryRaw`SELECT "id","username","name","surname","address","province","rold" FROM    "Users" WHERE "province" like ${province}`;
 });
 
 app.post("/addNewUser", async ({ body }: { body: User }) => {
@@ -55,7 +55,7 @@ app.post("/editUser", async ({ body }: { body: User }) => {
       body;
 
     await db.$queryRaw`UPDATE "Users" SET "username" = ${username}, "password" = ${password},"name" = ${name},"surname" = ${surname},"address" = ${address},"province" = ${province},"role" = ${role}
-    WHERE "id" like id`;
+    WHERE "id" = id`;
 
     return "editing users data";
   } catch (error: any) {
