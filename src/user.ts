@@ -1,4 +1,5 @@
 import { Elysia } from "elysia";
+import swagger from "@elysiajs/swagger";
 import db from "./db";
 
 const app = new Elysia({ prefix: "/user" });
