@@ -13,15 +13,19 @@ interface Customer {
   province: string;
 }
 
+app.get("/getList", async () => {
+  return await db.$queryRaw`SELECT "id","name","surname","company_name","credit_limit","address","tax_id,","tel" FROM "customers"`;
+});
+
 app.get("/getByID/:id", async (id: string) => {
-  return await db.$queryRaw`SELECT "id","name","surname","company_name","credit_limit","address","tax_id,","tel" FROM "customers" WHERE id like ${id}`;
+  return await db.$queryRaw`SELECT "id","name","surname","company_name","credit_limit","address","tax_id,","tel" FROM "customers" WHERE id = ${id}`;
 });
 
 app.get("/getIDbynameAndSurnameOrCompanyName/:name/", async (name: string) => {
   return await db.$queryRaw`SELECT "id" FROM "customers" WHERE "name" like ${name}  `;
 });
 
-app.post("/addNewUser", async ({ body }: { body: Customer }) => {
+app.post("/addNewCustomer", async ({ body }: { body: Customer }) => {
   try {
     const { name, credit_limit, address, tax_id, tel, province } = body;
     await db.$queryRaw`INSERT INTO "Customers" 
@@ -37,7 +41,7 @@ app.post("/addNewUser", async ({ body }: { body: Customer }) => {
   }
 });
 
-app.post("/editUser", async ({ body }: { body: Customer }) => {
+app.post("/editCustomer", async ({ body }: { body: Customer }) => {
   try {
     const { id, name, credit_limit, address, tax_id, tel, province } = body;
 
