@@ -14,7 +14,7 @@ app.get("/getByID/:id", async (id: string) => {
 });
 
 app.get("/getList", async () => {
-  return await db.$queryRaw`SELECT "id", FROM "spare_parts";`;
+  return await db.$queryRaw`SELECT "id","name" FROM "spare_parts";`;
 });
 
 app.post("/insertSparePart", async ({ body }: { body: SparePart }) => {
