@@ -1,7 +1,8 @@
 import { Elysia } from "elysia";
+import swagger from "@elysiajs/swagger";
 import db from "./db";
 
-const app = new Elysia({ prefix: "/user" });
+const app = new Elysia({ prefix: "/user", detail: { tags: ["Users"] } });
 
 interface User {
   id: string;
@@ -12,18 +13,19 @@ interface User {
   address: string;
   province: string;
   role: string;
+  addDate: Date;
 }
 
 app.get("/searchbyID/:id", async (id) => {
-  return await db.$queryRaw`SELECT "id","username","name","surname","address","province","role" FROM "Users" WHERE "id" like ${id};`;
+  return await db.$queryRaw`SELECT "id","username","name","surname","address","province","role","addDate" FROM "Users" WHERE "id" = ${id};`;
 });
 
 app.get("/getUserList", async () => {
-  return await db.$queryRaw`SELECT "id","username","name","surname","address","province","role" FROM "Users";`;
+  return await db.$queryRaw`SELECT "id","username","name","surname","address","province","role","addDate" FROM "Users";`;
 });
 
 app.get("/getUserListWithFilterRole/:role", async (role) => {
-  return await db.$queryRaw`SELECT "id","username","name","surname","address","province","role" FROM "Users" WHERE "role" = ${role};`;
+  return await db.$queryRaw`SELECT "id","username","name","surname","address","province","role","addDate" FROM "Users" WHERE "role" = ${role};`;
 });
 
 app.get("/login/:username/:password", async ({ params }) => {
@@ -31,7 +33,8 @@ app.get("/login/:username/:password", async ({ params }) => {
 });
 
 app.get("/getUserListWithFilterProvince", async (province) => {
-  return await db.$queryRaw`SELECT "id","username","name","surname","address","province","rold" FROM    "Users" WHERE "province" like ${province}`;
+  return await db.$queryRaw`SELECT "id","username","name","surname","address","province","rold","addDate" FROM 
+  "Users" WHERE "province" like ${province}`;
 });
 
 app.post("/addNewUser", async ({ body }: { body: User }) => {

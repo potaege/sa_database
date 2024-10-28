@@ -2,7 +2,7 @@ import { Elysia } from "elysia";
 
 import db from "./db";
 
-const app = new Elysia({ prefix: "/works" });
+const app = new Elysia({ prefix: "/works", detail: { tags: ["Work"] } });
 
 interface Work {
   id: string;
@@ -17,8 +17,7 @@ interface Work {
 
 app.post("/createNewWork", async ({ body }: { body: Work }) => {
   try {
-    const { mail_date, service_date, status, customerID, address, province } =
-      body;
+    const { mail_date, service_date, customerID, address, province } = body;
 
     await db.$queryRaw`INSERT INTO "Works" 
     ("mail_date","service_date","customerID","address","province")
@@ -49,16 +48,8 @@ app.get("/getWorksListNotAssigned", async () => {
 
 app.post("/editWork", async ({ body }: { body: Work }) => {
   try {
-    const {
-      id,
-      mail_date,
-      service_date,
-      status,
-      customerID,
-      address,
-      province,
-    } = body;
-    await db.$queryRaw`UPDATE "Works" SET "mail_date" = ${mail_date}, "service_date" = ${service_date},"status" = ${status},"customerID" = ${customerID},"address" = ${address},"province" = ${province}
+    const { id, mail_date, service_date, customerID, address, province } = body;
+    await db.$queryRaw`UPDATE "Works" SET "mail_date" = ${mail_date}, "service_date" = ${service_date},"customerID" = ${customerID},"address" = ${address},"province" = ${province}
     WHERE "id" = ${id}`;
     return "edit work";
   } catch (error: any) {
@@ -77,6 +68,20 @@ app.post("/editResponsiblePerson", async ({ body }: { body: Work }) => {
   } catch (error: any) {
     return {
       error: "Error while editing responsible person",
+      details: error.message,
+    };
+  }
+});
+
+app.post("/setWorkStatus", async ({ body }: { body: Work }) => {
+  try {
+    const { id, status } = body;
+    await db.$queryRaw`UPDATE "Works" SET"status" = ${status}
+    WHERE "id" = ${id}`;
+    return "edit work";
+  } catch (error: any) {
+    return {
+      error: "Error while editing work",
       details: error.message,
     };
   }
