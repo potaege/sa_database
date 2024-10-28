@@ -9,7 +9,7 @@ datasource easy_service {
 }
 
 model Users {
-  id                    String                  @id @default(uuid())
+  id                    Int                     @id @default(autoincrement())
   username              String
   password              String
   name                  String
@@ -54,7 +54,7 @@ model Works {
   mail_date       DateTime
   service_Date    DateTime?
   status          Int               @default(0)
-  userID          String?           @unique
+  userID          Int?              @unique
   customerID      Int               @unique
   address         String
   province        String
@@ -105,8 +105,8 @@ model Transaction_logs {
   quantity      Int
   status        Int         @default(0)
   sparePartID   Int         @unique
-  userID        String      @unique
-  fromUserID    String      @unique
+  userID        Int         @unique
+  fromUserID    Int         @unique
   addDate       DateTime    @default(now())
   spare_part_id Spare_parts @relation(fields: [sparePartID], references: [id])
   user_id       Users       @relation("UserLog", fields: [userID], references: [id])
@@ -116,7 +116,7 @@ model Transaction_logs {
 model Spare_parts_engineers {
   id            Int      @id @default(autoincrement())
   spare_part_id Int      @unique
-  engineer_id   String   @unique
+  engineer_id   Int      @unique
   quantity      Int
   addDate       DateTime @default(now())
 
