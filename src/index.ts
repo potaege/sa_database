@@ -1,30 +1,17 @@
 import { Elysia } from "elysia";
-import user from "./user";
+import user from "./users";
 import auth from "./auth";
 import spare_parts from "./spare_parts";
 import customers from "./customers";
 import work from "./work";
 import request from "./request";
 import spare_parts_request from "./spare_parts_request";
+import spare_parts_engineers from "./spare_parts_engineer";
+import Transaction_log from "./transactionLogs";
+import AdditionalCost from "./additionalcosts";
 import swagger from "@elysiajs/swagger";
 
-const app = new Elysia().use(
-  swagger({
-    documentation: {
-      tags: [
-        { name: "user", description: "user query api" },
-        { name: "spare_parts", description: "spare parts query api" },
-        { name: "customers", description: "customers query api" },
-        { name: "work", description: "work query api" },
-        {
-          name: "spare_parts_request",
-          description: "spare parts request query api",
-        },
-        { name: "request", description: "request query api" },
-      ],
-    },
-  })
-);
+const app = new Elysia().use(swagger);
 
 app.use(auth);
 app.use(user);
@@ -33,6 +20,9 @@ app.use(customers);
 app.use(work);
 app.use(request);
 app.use(spare_parts_request);
+app.use(spare_parts_engineers);
+app.use(Transaction_log);
+app.use(AdditionalCost);
 
 app.listen(3000);
 

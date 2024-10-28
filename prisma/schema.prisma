@@ -19,8 +19,8 @@ model Users {
   role                  String
   addDate               DateTime                @default(now())
   works                 Works[]
-  movedItems            Transaction_log[]       @relation("UserLog")
-  receivedItems         Transaction_log[]       @relation("FromUserLog")
+  movedItems            Transaction_logs[]      @relation("UserLog")
+  receivedItems         Transaction_logs[]      @relation("FromUserLog")
   Spare_parts_engineers Spare_parts_engineers[]
 }
 
@@ -31,85 +31,47 @@ model Spare_parts {
   price                 Float
   addDate               DateTime               @default(now())
   Spare_parts_requests  Spare_parts_requests[]
-  Transaction_log       Transaction_log?
+  Transaction_logs      Transaction_logs?
   Spare_parts_engineers Spare_parts_engineers?
 }
 
 model Customers {
-  id           Int        @id @default(autoincrement())
+  id           Int      @id @default(autoincrement())
   name         String
+  surname      String
+  company_name String
   credit_limit Float
   address      String
   tax_id       String?
   tel          String
   province     String
-  add_date     DateTime   @default(now())
+  addDate      DateTime @default(now())
   Works        Works[]
-  Invoices     Invoices[]
 }
 
 model Works {
-  id             String           @id @default(cuid())
-  mail_date      DateTime
-  service_Date   DateTime?
-  status         Int              @default(0)
-  userID         String?          @unique
-  customerID     Int              @unique
-  address        String
-  province       String
-  addDate        DateTime         @default(now())
-  user_id        Users?           @relation(fields: [userID], references: [id])
-  customer_id    Customers        @relation(fields: [customerID], references: [id])
-  quotations     Quotations[]
-  invoices       Invoices[]
-  po             PO[]
-  Requests       Requests[]
-  AdditionalCost AdditionalCost[]
+  id              String            @id @default(uuid())
+  mail_date       DateTime
+  service_Date    DateTime?
+  status          Int               @default(0)
+  userID          String?           @unique
+  customerID      Int               @unique
+  address         String
+  province        String
+  addDate         DateTime          @default(now())
+  user_id         Users?            @relation(fields: [userID], references: [id])
+  customer_id     Customers         @relation(fields: [customerID], references: [id])
+  Requests        Requests[]
+  AdditionalCosts AdditionalCosts[]
 }
 
-model AdditionalCost {
-  id          Int    @id @default(autoincrement())
+model AdditionalCosts {
+  id          Int      @id @default(autoincrement())
   description String
   cost        Float
-  workID      String @unique
-  work_id     Works  @relation(fields: [workID], references: [id])
-}
-
-model Quotations {
-  id             String    @id @default(cuid())
-  date           DateTime
-  contact_person String
-  delivery_to    String
-  delivery_on    DateTime?
-  payment_term   String
-  workID         String    @unique
-  addDate        DateTime  @default(now())
-  work_id        Works     @relation(fields: [workID], references: [id])
-}
-
-// เพิ่ม Column ของ Service charge , Travel fee ? 
-
-model Invoices {
-  id                 String    @id @default(cuid())
-  date               DateTime
-  due_date           DateTime
-  customerID         Int
-  workID             String    @unique()
-  addedDate          DateTime  @default(now())
-  status             Int // ใช้บอกว่าจ่ายตังหรือบัง
-  outstandingBalance Float
-  customer_id        Customers @relation(fields: [customerID], references: [id])
-  work_id            Works     @relation(fields: [workID], references: [id])
-
-  @@index([customerID])
-}
-
-model PO {
-  id        String   @id @default(cuid())
-  date      DateTime
-  workID    String   @unique
-  addedDate DateTime @default(now())
-  work_id   Works    @relation(fields: [workID], references: [id])
+  workID      String   @unique
+  work_id     Works    @relation(fields: [workID], references: [id])
+  addDate     DateTime @default(now())
 }
 
 model Requests {
@@ -119,7 +81,7 @@ model Requests {
   rated                String
   warranty             Boolean
   workID               String
-  addedDate            DateTime               @default(now())
+  addDate              DateTime               @default(now())
   Spare_parts_requests Spare_parts_requests[]
   work_id              Works                  @relation(fields: [workID], references: [id])
 
@@ -133,29 +95,30 @@ model Spare_parts_requests {
   description     String
   sn              String?
   requestID       Int         @unique
-  addedDate       DateTime    @default(now())
+  addDate         DateTime    @default(now())
   spare_parts_id  Spare_parts @relation(fields: [sparePartID], references: [id])
   request_id      Requests    @relation(fields: [requestID], references: [id])
 }
 
-model Transaction_log {
+model Transaction_logs {
   id            Int         @id @default(autoincrement())
   quantity      Int
-  status        Int
+  status        Int         @default(0)
   sparePartID   Int         @unique
   userID        String      @unique
   fromUserID    String      @unique
-  addedDate     DateTime    @default(now())
+  addDate       DateTime    @default(now())
   spare_part_id Spare_parts @relation(fields: [sparePartID], references: [id])
   user_id       Users       @relation("UserLog", fields: [userID], references: [id])
   rom_user_idf  Users       @relation("FromUserLog", fields: [fromUserID], references: [id])
 }
 
 model Spare_parts_engineers {
-  id            Int    @id @default(autoincrement())
-  spare_part_id Int    @unique
-  engineer_id   String @unique
+  id            Int      @id @default(autoincrement())
+  spare_part_id Int      @unique
+  engineer_id   String   @unique
   quantity      Int
+  addDate       DateTime @default(now())
 
   engineer   Users       @relation(fields: [engineer_id], references: [id])
   spare_part Spare_parts @relation(fields: [spare_part_id], references: [id])

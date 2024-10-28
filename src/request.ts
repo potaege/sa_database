@@ -30,12 +30,12 @@ app.post("/insertRequest", async ({ body }: { body: Request }) => {
 });
 
 app.get("/getByID:/id", async (id) => {
-  return await db.$queryRaw`SELECT "id","model","sn","rated","description","warranty","workID","addedDate"
+  return await db.$queryRaw`SELECT "id","model","sn","rated","description","warranty","workID","addDate"
   FROM "request" WHERE "id" like ${id}`;
 });
 
 app.get("/getList", async () => {
-  return await db.$queryRaw`SELECT "id","model","sn","rated","description","warranty","workID","addedDate"
+  return await db.$queryRaw`SELECT "id","model","sn","rated","description","warranty","workID","addDate"
   FROM "request"`;
 });
 

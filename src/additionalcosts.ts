@@ -2,7 +2,7 @@ import { Elysia } from "elysia";
 import swagger from "@elysiajs/swagger";
 import db from "./db";
 
-const app = new Elysia({ prefix: "/additionalcost" });
+const app = new Elysia({ prefix: "/additionalcosts" });
 
 interface Additionalcost {
   id: number;
@@ -11,10 +11,11 @@ interface Additionalcost {
   amount: number;
   unit: string;
   work_id: string;
+  addDate: Date;
 }
 
 app.get("/getFromWorkId/:workid", async (workID) => {
-  return await db.$queryRaw`SELECT "id","description","cost","amount","unit","work_id" FROM "additional_costs" WHERE "work_id" = ${workID};`;
+  return await db.$queryRaw`SELECT "id","description","cost","amount","unit","work_id","addDate" FROM "additional_costs" WHERE "work_id" = ${workID};`;
 });
 
 app.post(

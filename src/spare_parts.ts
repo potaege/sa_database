@@ -7,21 +7,24 @@ interface SparePart {
   id: number;
   name: string;
   description: string;
+  price: number;
+  unit: string;
+  addDate: Date;
 }
 
 app.get("/getByID/:id", async (id: string) => {
-  return await db.$queryRaw`SELECT * FROM "spare_parts" WHERE "id" like ${id};`;
+  return await db.$queryRaw`SELECT "id","name","description","price","unit","addDate" FROM "spare_parts" WHERE "id" like ${id};`;
 });
 
 app.get("/getList", async () => {
-  return await db.$queryRaw`SELECT "id","name" FROM "spare_parts";`;
+  return await db.$queryRaw`SELECT "id","name","description","price","unit","addDate" FROM "spare_parts";`;
 });
 
 app.post("/insertSparePart", async ({ body }: { body: SparePart }) => {
   try {
-    const { name, description } = body;
+    const { name, description, price, unit } = body;
 
-    await db.$queryRaw`INSERT INTO "Spare_parts" ("name","description") VALUES (${name},${description})`;
+    await db.$queryRaw`INSERT INTO "Spare_parts" ("name","description","price","unit") VALUES (${name},${description},${price},${unit})`;
     return "add new spare parts";
   } catch (error: any) {
     return {
@@ -33,9 +36,9 @@ app.post("/insertSparePart", async ({ body }: { body: SparePart }) => {
 
 app.post("/editSparePart", async ({ body }: { body: SparePart }) => {
   try {
-    const { id, name, description } = body;
+    const { id, name, description, price, unit } = body;
 
-    await db.$queryRaw`UPDATE "Spare_parts" SET "name" = ${name}, "description" = ${description} WHERE "id" like ${id}`;
+    await db.$queryRaw`UPDATE "Spare_parts" SET "name" = ${name}, "description" = ${description}, "price" = ${price}, "unit" = ${unit} WHERE "id" = ${id}`;
     return "update spare parts data";
   } catch (error: any) {
     return {

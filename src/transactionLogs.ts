@@ -2,7 +2,7 @@ import { Elysia } from "elysia";
 import swagger from "@elysiajs/swagger";
 import db from "./db";
 
-const app = new Elysia({ prefix: "/transactionLog" });
+const app = new Elysia({ prefix: "/transactionLogs" });
 
 interface Transaction_log {
   id: number;
@@ -11,11 +11,12 @@ interface Transaction_log {
   user_id: number;
   from_user_id: number;
   status: number;
+  addDate: Date;
 }
 
 app.get("/getList", async () => {
-  return await db.$queryRaw`SELECT "id","spare_parts","quantity","user_id","from_user_id","status" 
-  FROM "Transaction_log"`;
+  return await db.$queryRaw`SELECT "id","spare_parts","quantity","user_id","from_user_id","status","addDate" 
+  FROM "Transaction_logs"`;
 });
 
 app.post(
@@ -23,7 +24,7 @@ app.post(
   async ({ body }: { body: Transaction_log }) => {
     try {
       const { spare_parts, quantity, user_id, from_user_id, status } = body;
-      await db.$queryRaw`INSERT INTO "Transaction_log" ("spare_parts","quantity","user_id","from_user_id","status") 
+      await db.$queryRaw`INSERT INTO "Transaction_logs" ("spare_parts","quantity","user_id","from_user_id","status") 
       VALUES (${spare_parts}, ${quantity}, ${user_id}, ${from_user_id}, ${status})`;
       return { message: "Transaction Log inserted successfully." };
     } catch (error: any) {
