@@ -2,7 +2,7 @@ import { Elysia } from "elysia";
 import swagger from "@elysiajs/swagger";
 import db from "./db";
 
-const app = new Elysia({ prefix: "/user" });
+const app = new Elysia({ prefix: "/user", detail: { tags: ["Users"] } });
 
 interface User {
   id: string;

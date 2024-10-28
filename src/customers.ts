@@ -1,7 +1,10 @@
 import { Elysia } from "elysia";
 import db from "./db";
 
-const app = new Elysia({ prefix: "/customers" });
+const app = new Elysia({
+  prefix: "/customers",
+  detail: { tags: ["Customers"] },
+});
 
 interface Customer {
   id: number;

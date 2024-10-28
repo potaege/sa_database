@@ -11,7 +11,30 @@ import Transaction_log from "./transactionLogs";
 import AdditionalCost from "./additionalcosts";
 import swagger from "@elysiajs/swagger";
 
-const app = new Elysia().use(swagger);
+const app = new Elysia().use(
+  swagger({
+    documentation: {
+      info: { title: "Easy service document", version: "1.0.0" },
+      tags: [
+        { name: "Users", description: "Users endpoint" },
+        { name: "Spare Parts", description: "Spare Parts endpoint" },
+        { name: "Customers", description: "Customers endpoint" },
+        { name: "Work", description: "Work endpoint" },
+        { name: "Request", description: "Request endpoint" },
+        {
+          name: "Spare Parts Request",
+          description: "Spare Parts Request endpoint",
+        },
+        {
+          name: "Spare Parts Engineers",
+          description: "Spare Parts Engineers endpoint",
+        },
+        { name: "Transaction Log", description: "Transaction Log endpoint" },
+        { name: "Additional Costs", description: "Additional Costs endpoint" },
+      ],
+    },
+  })
+);
 
 app.use(auth);
 app.use(user);

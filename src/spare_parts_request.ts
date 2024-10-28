@@ -12,7 +12,10 @@ interface Spare_parts_request {
   add_date: Date;
 }
 
-const app = new Elysia({ prefix: "/spare_parts_request" });
+const app = new Elysia({
+  prefix: "/spare_parts_request",
+  detail: { tags: ["Spare Parts Request"] },
+});
 
 app.get("/getListInRequest:/requestid", async (request_id) => {
   return await db.$queryRaw`SELECT Spare_parts_request.id, Spare_parts_request.request_id,Spare_parts_request.name, Spare_parts_request.spare_part_qty,Spare_parts_request.price,Spare_parts_request.description, Spare_parts_request.addDate
