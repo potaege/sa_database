@@ -57,6 +57,11 @@ app.get("/getWorksListNotAssigned", async ({ params }) => {
     FROM "Works" WHERE "userID" IS NULL;`;
 });
 
+app.get("/getWorksListByStatus/:status", async ({ params }) => {
+  return await db.$queryRaw`SELECT "id","mail_date","service_date","status","userID","customerID","address","province","addDate" 
+    FROM "Works" WHERE "status" = ${parseInt(params.status)}`;
+});
+
 app.post(
   "/editWork",
   async ({ body }: { body: Work }) => {
