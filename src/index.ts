@@ -10,6 +10,7 @@ import spare_parts_engineers from "./spare_parts_engineer";
 import Transaction_log from "./transactionLogs";
 import AdditionalCost from "./additionalcosts";
 import swagger from "@elysiajs/swagger";
+import middleware from "./middleware";
 
 const app = new Elysia().use(
   swagger({
@@ -36,6 +37,7 @@ const app = new Elysia().use(
   })
 );
 
+app.use(middleware);
 app.use(auth);
 app.use(user);
 app.use(spare_parts);

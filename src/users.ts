@@ -1,4 +1,4 @@
-import { Elysia } from "elysia";
+import { Elysia, t } from "elysia";
 import crypto from "crypto";
 import db from "./db";
 
@@ -32,30 +32,98 @@ const encryptWithSalt = (data: string, salt: string): string => {
   return hashed;
 };
 
-app.get("/searchbyID/:id", async (id) => {
-  return await db.$queryRaw`SELECT "id","username","name","surname","address","province","role","addDate" FROM "Users" WHERE "id" = ${id};`;
-});
-
-app.get("/getUserList", async () => {
-  return await db.$queryRaw`SELECT "id","username","name","surname","address","province","role","addDate" FROM "Users";`;
-});
-
-app.get("/getUserListWithFilterRole/:role", async (role) => {
-  return await db.$queryRaw`SELECT "id","username","name","surname","address","province","role","addDate" FROM "Users" WHERE "role" = ${role};`;
-});
-
-app.post("/login/", async ({ body }: { body: User }) => {
-  const { username, password, salt } = body;
-
-  const authen: User[] =
-    await db.$queryRaw`SELECT "username", "password", "salt" FROM "Users" WHERE "username" = ${username};`;
-
-  const hashedInput = encryptWithSalt(password, authen[0].salt);
-
-  if (authen[0].password === hashedInput) {
-    return await db.$queryRaw`SELECT "id" FROM "Users" where "username" = ${username}`;
+app.get(
+  "/searchbyID/:id",
+  async (id) => {
+    return await db.$queryRaw`SELECT "id","username","name","surname","address","province","role","addDate" FROM "Users" WHERE "id" = ${id};`;
+  },
+  {
+    response: t.Object({
+      id: t.Number(),
+      username: t.String(),
+      name: t.String(),
+      surname: t.String(),
+      address: t.String(),
+      province: t.String(),
+      role: t.String(),
+      addDate: t.Date(),
+    }),
   }
-});
+);
+
+app.get(
+  "/getUserList",
+  async ({ params }) => {
+    return await db.$queryRaw`SELECT "id","username","name","surname","address","province","role","addDate" FROM "Users";`;
+  },
+  {
+    response: t.Object({
+      id: t.Number(),
+      username: t.String(),
+      name: t.String(),
+      surname: t.String(),
+      address: t.String(),
+      province: t.String(),
+      role: t.String(),
+      addDate: t.Date(),
+    }),
+  }
+);
+
+app.get(
+  "/getUserListWithFilterRole/:role",
+  async (role) => {
+    return await db.$queryRaw`SELECT "id","username","name","surname","address","province","role","addDate" FROM "Users" WHERE "role" = ${role};`;
+  },
+  {
+    response: t.Object({
+      id: t.Number(),
+      username: t.String(),
+      name: t.String(),
+      surname: t.String(),
+      address: t.String(),
+      province: t.String(),
+      role: t.String(),
+      addDate: t.Date(),
+    }),
+  }
+);
+
+app.post(
+  "/login/",
+  async ({ body }: { body: User }) => {
+    try {
+      const { username, password, salt } = body;
+
+      const authen: User[] =
+        await db.$queryRaw`SELECT "username", "password", "salt" FROM "Users" WHERE "username" = ${username};`;
+
+      const hashedInput = encryptWithSalt(password, authen[0].salt);
+
+      if (authen[0].password === hashedInput) {
+        const user: User[] =
+          await db.$queryRaw`SELECT "id" FROM "Users" where "username" = ${username}`;
+        return {
+          payload: user[0].id,
+          error: "",
+          details: "",
+        };
+      }
+    } catch (error: any) {
+      return {
+        payload: "",
+        error: "Error while login",
+        details: error.message,
+      };
+    }
+  },
+  {
+    body: t.Object({
+      username: t.String(),
+      password: t.String(),
+    }),
+  }
+);
 app.get("/getUserListWithFilterProvince", async (province) => {
   return await db.$queryRaw`SELECT "id","username","name","surname","address","province","rold","addDate" 
   FROM "Users" 
@@ -63,37 +131,68 @@ app.get("/getUserListWithFilterProvince", async (province) => {
   like ${province}`;
 });
 
-app.post("/addNewUser", async ({ body }: { body: User }) => {
-  try {
-    const { username, password, name, surname, address, province, role } = body;
-    const salt = generateSalt();
-    const hashed = encryptWithSalt(password, salt);
-    await db.$queryRaw`INSERT INTO "Users" ("username","password","salt","name","surname","address","province","role") VALUES (${username},${hashed},${salt},${name},${surname},${address},${province},${role})`;
+app.post(
+  "/addNewUser",
+  async ({ body }: { body: User }) => {
+    try {
+      const { username, password, name, surname, address, province, role } =
+        body;
+      const salt = generateSalt();
+      const hashed = encryptWithSalt(password, salt);
+      await db.$queryRaw`INSERT INTO "Users" ("username","password","salt","name","surname","address","province","role") VALUES (${username},${hashed},${salt},${name},${surname},${address},${province},${role})`;
 
-    return "add new users";
-  } catch (error: any) {
-    return {
-      error: "Error while creating user",
-      details: error.message,
-    };
+      return "add new users";
+    } catch (error: any) {
+      return {
+        error: "Error while creating user",
+        details: error.message,
+      };
+    }
+  },
+  {
+    body: t.Object({
+      username: t.String(),
+      password: t.String(),
+      name: t.String(),
+      surname: t.String(),
+      address: t.String(),
+      province: t.String(),
+      role: t.String(),
+    }),
   }
-});
+);
 
-app.post("/editUser", async ({ body }: { body: User }) => {
-  try {
-    const { username, password, name, surname, address, province, role } = body;
+app.post(
+  "/editUser",
+  async ({ body }: { body: User }) => {
+    try {
+      const { id, username, password, name, surname, address, province, role } =
+        body;
 
-    await db.$queryRaw`UPDATE "Users" SET "username" = ${username}, "password" = ${password},"name" = ${name},"surname" = ${surname},"address" = ${address},"province" = ${province},"role" = ${role}
-    WHERE "id" = id`;
+      await db.$queryRaw`UPDATE "Users" SET "username" = ${username}, "password" = ${password},"name" = ${name},"surname" = ${surname},"address" = ${address},"province" = ${province},"role" = ${role}
+    WHERE "id" = ${id}`;
 
-    return "editing users data";
-  } catch (error: any) {
-    return {
-      error: "Error while editing user data",
-      details: error.message,
-    };
+      return "editing users data";
+    } catch (error: any) {
+      return {
+        error: "Error while editing user data",
+        details: error.message,
+      };
+    }
+  },
+  {
+    body: t.Object({
+      id: t.Number(),
+      username: t.String(),
+      password: t.String(),
+      name: t.String(),
+      surname: t.String(),
+      address: t.String(),
+      province: t.String(),
+      role: t.String(),
+    }),
   }
-});
+);
 
 //TODO List
 
