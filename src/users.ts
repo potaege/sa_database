@@ -108,6 +108,12 @@ app.post(
           error: "",
           details: "",
         };
+      } else {
+        return {
+          payload: "",
+          error: "authentication failed",
+          details: "Wrong password",
+        };
       }
     } catch (error: any) {
       return {
