@@ -116,10 +116,10 @@ model Transaction_logs {
 model Spare_parts_engineers {
   id            Int      @id @default(autoincrement())
   spare_part_id Int      @unique
-  engineer_id   Int      @unique
+  user_id       Int      @unique
   quantity      Int
   addDate       DateTime @default(now())
 
-  engineer   Users       @relation(fields: [engineer_id], references: [id])
+  user       Users       @relation(fields: [user_id], references: [id])
   spare_part Spare_parts @relation(fields: [spare_part_id], references: [id])
 }
