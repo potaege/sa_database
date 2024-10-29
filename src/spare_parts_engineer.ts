@@ -17,7 +17,7 @@ interface SparePartEngineerTable {
 app.get("/getFromUserID/:userID", (user_id) => {
   return db.$queryRaw`SELECT "id","spare_part_id","quantity","user_id","addDate"
     FROM Spare_parts_engineers 
-    WHERE user_id`;
+    WHERE user_id = ${user_id}`;
 });
 
 app.post(
