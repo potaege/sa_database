@@ -18,11 +18,11 @@ interface Customer {
 }
 
 app.get("/getList", async () => {
-  return await db.$queryRaw`SELECT "id","name","credit_limit","address","tax_id","tel","addDate" FROM "Customers"`;
+  return await db.$queryRaw`SELECT "id","name","credit_limit","address","tax_id","tel","addDate","province" FROM "Customers"`;
 });
 
 app.get("/getByID/:id", async (id: string) => {
-  return await db.$queryRaw`SELECT "id","name","credit_limit","address","tax_id","tel","addDate" FROM "Customers" WHERE id = ${id}`;
+  return await db.$queryRaw`SELECT "id","name","credit_limit","address","tax_id","tel","addDate","province" FROM "Customers" WHERE id = ${id}`;
 });
 
 app.get("/getIDbyName/:name", async (name: string) => {
