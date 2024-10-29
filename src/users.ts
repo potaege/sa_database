@@ -59,7 +59,7 @@ app.post(
 
       if (authen[0].password === hashedInput) {
         const user: User[] =
-          await db.$queryRaw`SELECT "id" FROM "Users" where "username" = ${username}`;
+          await db.$queryRaw`SELECT "id","username","name","surname","address","province","role","addDate" FROM "Users" where "username" = ${username}`;
         return {
           payload: user[0].id,
           error: "",
