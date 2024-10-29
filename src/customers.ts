@@ -18,22 +18,22 @@ interface Customer {
 }
 
 app.get("/getList", async () => {
-  return await db.$queryRaw`SELECT "id","name","credit_limit","address","tax_id,","tel","addDate" FROM "customers"`;
+  return await db.$queryRaw`SELECT "id","name","credit_limit","address","tax_id,","tel","addDate" FROM "Customers"`;
 });
 
 app.get("/getByID/:id", async (id: string) => {
-  return await db.$queryRaw`SELECT "id","name","credit_limit","address","tax_id,","tel","addDate" FROM "customers" WHERE id = ${id}`;
+  return await db.$queryRaw`SELECT "id","name","credit_limit","address","tax_id,","tel","addDate" FROM "Customers" WHERE id = ${id}`;
 });
 
 app.get(
   "/getIDbynameAndSurname/:name/:/surname",
   async (name: string, surname: string) => {
-    return await db.$queryRaw`SELECT "id" FROM "customers" WHERE "name" like ${name} && "surname" like ${surname}`;
+    return await db.$queryRaw`SELECT "id" FROM "Customers" WHERE "name" like ${name} && "surname" like ${surname}`;
   }
 );
 
 app.get("/getIDbyCompanyName/:companyName", async (companyName: string) => {
-  return await db.$queryRaw`SELECT "id" FROM "customers" WHERE "company_name" like ${companyName}`;
+  return await db.$queryRaw`SELECT "id" FROM "Customers" WHERE "company_name" like ${companyName}`;
 });
 
 app.post("/addNewCustomer", async ({ body }: { body: Customer }) => {
