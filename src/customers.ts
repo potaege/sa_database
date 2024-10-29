@@ -25,15 +25,8 @@ app.get("/getByID/:id", async (id: string) => {
   return await db.$queryRaw`SELECT "id","name","credit_limit","address","tax_id,","tel","addDate" FROM "Customers" WHERE id = ${id}`;
 });
 
-app.get(
-  "/getIDbynameAndSurname/:name/:/surname",
-  async (name: string, surname: string) => {
-    return await db.$queryRaw`SELECT "id" FROM "Customers" WHERE "name" like ${name} && "surname" like ${surname}`;
-  }
-);
-
-app.get("/getIDbyCompanyName/:companyName", async (companyName: string) => {
-  return await db.$queryRaw`SELECT "id" FROM "Customers" WHERE "company_name" like ${companyName}`;
+app.get("/getIDbyName/:name", async (name: string) => {
+  return await db.$queryRaw`SELECT "id" FROM "Customers" WHERE "name" like ${name}`;
 });
 
 app.post("/addNewCustomer", async ({ body }: { body: Customer }) => {
