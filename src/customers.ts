@@ -1,4 +1,4 @@
-import { Elysia } from "elysia";
+import { Elysia, t } from "elysia";
 import db from "./db";
 
 const app = new Elysia({
@@ -29,37 +29,64 @@ app.get("/getIDbyName/:name", async (name: string) => {
   return await db.$queryRaw`SELECT "id" FROM "Customers" WHERE "name" like ${name}`;
 });
 
-app.post("/addNewCustomer", async ({ body }: { body: Customer }) => {
-  try {
-    const { name, credit_limit, address, tax_id, tel, province } = body;
+app.post(
+  "/addNewCustomer",
+  async ({ body }: { body: Customer }) => {
+    try {
+      const { name, credit_limit, address, tax_id, tel, province } = body;
 
-    await db.$queryRaw`INSERT INTO "Customers" 
-    ("name","surname","company_name","credit_limit","address","tax_id","tel","province")
+      await db.$queryRaw`INSERT INTO "Customers" 
+    ("name","credit_limit","address","tax_id","tel","province")
     VALUES (${name},${credit_limit},${address},${tax_id},${tel},${province})`;
 
-    return "add new users";
-  } catch (error: any) {
-    return {
-      error: "Error while creating user",
-      details: error.message,
-    };
+      return "add new users";
+    } catch (error: any) {
+      return {
+        error: "Error while creating user",
+        details: error.message,
+      };
+    }
+  },
+  {
+    body: t.Object({
+      name: t.String(),
+      credit_limit: t.Number(),
+      address: t.String(),
+      tax_id: t.String(),
+      tel: t.String(),
+      province: t.String(),
+    }),
   }
-});
+);
 
-app.post("/editCustomer", async ({ body }: { body: Customer }) => {
-  try {
-    const { id, name, credit_limit, address, tax_id, tel, province } = body;
+app.post(
+  "/editCustomer",
+  async ({ body }: { body: Customer }) => {
+    try {
+      const { id, name, credit_limit, address, tax_id, tel, province } = body;
 
-    await db.$queryRaw`UPDATE "Customers" SET "name" = ${name},"credit_limit" = ${credit_limit}, address = ${address}, "tax_id" = ${tax_id}, "tel" = ${tel}, "province" = ${province}
+      await db.$queryRaw`UPDATE "Customers" SET "name" = ${name},"credit_limit" = ${credit_limit}, address = ${address}, "tax_id" = ${tax_id}, "tel" = ${tel}, "province" = ${province}
     WHERE "id" like ${id} `;
 
-    return "editing users data";
-  } catch (error: any) {
-    return {
-      error: "Error while editing user data",
-      details: error.message,
-    };
+      return "editing users data";
+    } catch (error: any) {
+      return {
+        error: "Error while editing user data",
+        details: error.message,
+      };
+    }
+  },
+  {
+    body: t.Object({
+      id: t.Number(),
+      name: t.String(),
+      credit_limit: t.Number(),
+      address: t.String(),
+      tax_id: t.String(),
+      tel: t.String(),
+      province: t.String(),
+    }),
   }
-});
+);
 
 export default app;
