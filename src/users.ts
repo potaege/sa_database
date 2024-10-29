@@ -1,5 +1,5 @@
 import { Elysia } from "elysia";
-import swagger from "@elysiajs/swagger";
+import crypto from "crypto";
 import db from "./db";
 
 const app = new Elysia({ prefix: "/user", detail: { tags: ["Users"] } });
@@ -8,6 +8,7 @@ interface User {
   id: string;
   username: string;
   password: string;
+  salt: string;
   name: string;
   surname: string;
   address: string;
@@ -15,6 +16,21 @@ interface User {
   role: string;
   addDate: Date;
 }
+
+const generateSalt = (length: number = 16): string => {
+  return crypto
+    .randomBytes(Math.ceil(length / 2))
+    .toString("hex")
+    .slice(0, length);
+};
+
+const encryptWithSalt = (data: string, salt: string): string => {
+  const hashed = crypto
+    .createHash("sha256")
+    .update(data + salt)
+    .digest("hex");
+  return hashed;
+};
 
 app.get("/searchbyID/:id", async (id) => {
   return await db.$queryRaw`SELECT "id","username","name","surname","address","province","role","addDate" FROM "Users" WHERE "id" = ${id};`;
@@ -28,22 +44,31 @@ app.get("/getUserListWithFilterRole/:role", async (role) => {
   return await db.$queryRaw`SELECT "id","username","name","surname","address","province","role","addDate" FROM "Users" WHERE "role" = ${role};`;
 });
 
-app.get("/login/:username/", async ({ params }) => {
-  return await db.$queryRaw`SELECT "password","salt" FROM "Users" WHERE "username" = ${params.username}`;
-});
-app.get("/login/:username/:password/:salt", async ({ params }) => {
-  return await db.$queryRaw`SELECT "id" FROM "Users" WHERE "username" = ${params.username} AND "password" = ${params.password} AND "salt" = ${params.salt};`;
+app.post("/login/", async ({ body }: { body: User }) => {
+  const { username, password, salt } = body;
+
+  const authen: User[] =
+    await db.$queryRaw`SELECT "username", "password", "salt" FROM "Users" WHERE "username" = ${username};`;
+
+  const hashedInput = encryptWithSalt(password, authen[0].salt);
+
+  if (authen[0].password === hashedInput) {
+    return await db.$queryRaw`SELECT "id" FROM "Users" where "username" = ${username}`;
+  }
 });
 app.get("/getUserListWithFilterProvince", async (province) => {
-  return await db.$queryRaw`SELECT "id","username","name","surname","address","province","rold","addDate" FROM 
-  "Users" WHERE "province" like ${province}`;
+  return await db.$queryRaw`SELECT "id","username","name","surname","address","province","rold","addDate" 
+  FROM "Users" 
+  WHERE "province" 
+  like ${province}`;
 });
 
 app.post("/addNewUser", async ({ body }: { body: User }) => {
   try {
     const { username, password, name, surname, address, province, role } = body;
-
-    await db.$queryRaw`INSERT INTO "Users" ("username","password","name","surname","address","province","role") VALUES (${username},${password},${name},${surname},${address},${province},${role})`;
+    const salt = generateSalt();
+    const hashed = encryptWithSalt(password, salt);
+    await db.$queryRaw`INSERT INTO "Users" ("username","password","salt","name","surname","address","province","role") VALUES (${username},${hashed},${salt},${name},${surname},${address},${province},${role})`;
 
     return "add new users";
   } catch (error: any) {
@@ -56,8 +81,7 @@ app.post("/addNewUser", async ({ body }: { body: User }) => {
 
 app.post("/editUser", async ({ body }: { body: User }) => {
   try {
-    const { id, username, password, name, surname, address, province, role } =
-      body;
+    const { username, password, name, surname, address, province, role } = body;
 
     await db.$queryRaw`UPDATE "Users" SET "username" = ${username}, "password" = ${password},"name" = ${name},"surname" = ${surname},"address" = ${address},"province" = ${province},"role" = ${role}
     WHERE "id" = id`;
