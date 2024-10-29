@@ -13,11 +13,11 @@ interface SparePartEngineerTable {
   user_id: number;
   addDate: Date;
 }
-
-app.get("/getFromUserID/:user_id", async (user_id: string) => {
+app.get("/getFromUserID/:userID", async ({ params }) => {
+  const user_id = parseInt(params.userID);
   return await db.$queryRaw`SELECT "id","spare_part_id","quantity","user_id","addDate"
     FROM "Spare_parts_engineers"
-    WHERE user_id = ${parseInt(user_id)}`;
+    WHERE user_id = ${user_id}`;
 });
 
 app.post(
