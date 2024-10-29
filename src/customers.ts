@@ -9,8 +9,6 @@ const app = new Elysia({
 interface Customer {
   id: number;
   name: string;
-  surname: string;
-  company_name: string;
   credit_limit: number;
   address: string;
   tax_id: string;
@@ -20,11 +18,11 @@ interface Customer {
 }
 
 app.get("/getList", async () => {
-  return await db.$queryRaw`SELECT "id","name","surname","company_name","credit_limit","address","tax_id,","tel","addDate" FROM "customers"`;
+  return await db.$queryRaw`SELECT "id","name","credit_limit","address","tax_id,","tel","addDate" FROM "customers"`;
 });
 
 app.get("/getByID/:id", async (id: string) => {
-  return await db.$queryRaw`SELECT "id","name","surname","company_name","credit_limit","address","tax_id,","tel","addDate" FROM "customers" WHERE id = ${id}`;
+  return await db.$queryRaw`SELECT "id","name","credit_limit","address","tax_id,","tel","addDate" FROM "customers" WHERE id = ${id}`;
 });
 
 app.get(
@@ -40,20 +38,11 @@ app.get("/getIDbyCompanyName/:companyName", async (companyName: string) => {
 
 app.post("/addNewCustomer", async ({ body }: { body: Customer }) => {
   try {
-    const {
-      name,
-      surname,
-      company_name,
-      credit_limit,
-      address,
-      tax_id,
-      tel,
-      province,
-    } = body;
+    const { name, credit_limit, address, tax_id, tel, province } = body;
 
     await db.$queryRaw`INSERT INTO "Customers" 
     ("name","surname","company_name","credit_limit","address","tax_id","tel","province")
-    VALUES (${name},${surname},${company_name},${credit_limit},${address},${tax_id},${tel},${province})`;
+    VALUES (${name},${credit_limit},${address},${tax_id},${tel},${province})`;
 
     return "add new users";
   } catch (error: any) {
@@ -66,19 +55,9 @@ app.post("/addNewCustomer", async ({ body }: { body: Customer }) => {
 
 app.post("/editCustomer", async ({ body }: { body: Customer }) => {
   try {
-    const {
-      id,
-      name,
-      surname,
-      company_name,
-      credit_limit,
-      address,
-      tax_id,
-      tel,
-      province,
-    } = body;
+    const { id, name, credit_limit, address, tax_id, tel, province } = body;
 
-    await db.$queryRaw`UPDATE "Customers" SET "name" = ${name},"surname" = ${surname},"company_name" = ${company_name} "credit_limit" = ${credit_limit}, address = ${address}, "tax_id" = ${tax_id}, "tel" = ${tel}, "province" = ${province}
+    await db.$queryRaw`UPDATE "Customers" SET "name" = ${name},"credit_limit" = ${credit_limit}, address = ${address}, "tax_id" = ${tax_id}, "tel" = ${tel}, "province" = ${province}
     WHERE "id" like ${id} `;
 
     return "editing users data";

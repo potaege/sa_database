@@ -38,7 +38,7 @@ const app = new Elysia().use(
 );
 
 app.use(middleware);
-app.use(auth);
+// app.use(auth);
 app.use(user);
 app.use(spare_parts);
 app.use(customers);
