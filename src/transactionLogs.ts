@@ -22,6 +22,12 @@ app.get("/getList", async ({ params }) => {
   FROM "Transaction_logs"`;
 });
 
+app.get("/getList/:id", async ({ params }) => {
+  return await db.$queryRaw`SELECT "id","spare_parts","quantity","user_id","from_user_id","status","addDate" 
+  FROM "Transaction_logs"
+  WHERE "id" = ${params.id}`;
+});
+
 app.post(
   "/insertTransactionLog",
   async ({ body }: { body: Transaction_log }) => {

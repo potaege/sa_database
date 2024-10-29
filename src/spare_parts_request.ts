@@ -26,6 +26,12 @@ app.get("/getListInRequest/:request_id", async ({ params }) => {
   )})`;
 });
 
+app.get("/getById/:id", async ({ params }) => {
+  return await db.$queryRaw`SELECT "id","request_id", "spare_parts_id", "spare_parts_qty","price","description","add_date","sn" FROM "Spare_parts_request" WHERE id = ${parseInt(
+    params.id
+  )}`;
+});
+
 app.post(
   "/insertNewSparePartsRequest",
   async ({ body }: { body: Spare_parts_request }) => {
