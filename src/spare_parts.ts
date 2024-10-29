@@ -40,12 +40,10 @@ app.post(
   },
   {
     body: t.Object({
-      id: t.Number(),
       name: t.String(),
       description: t.String(),
       price: t.Number(),
       unit: t.String(),
-      addDate: t.Date(),
     }),
   }
 );
@@ -72,7 +70,6 @@ app.post(
       description: t.String(),
       price: t.Number(),
       unit: t.String(),
-      addDate: t.Date(),
     }),
   }
 );

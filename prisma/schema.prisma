@@ -29,6 +29,7 @@ model Spare_parts {
   id                    Int                    @id @default(autoincrement())
   name                  String                 @unique()
   description           String
+  unit                  String
   price                 Float
   addDate               DateTime               @default(now())
   Spare_parts_requests  Spare_parts_requests[]
