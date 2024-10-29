@@ -16,11 +16,11 @@ interface SparePart {
 }
 
 app.get("/getByID/:id", async (id: string) => {
-  return await db.$queryRaw`SELECT "id","name","description","price","unit","addDate" FROM "spare_parts" WHERE "id" like ${id};`;
+  return await db.$queryRaw`SELECT "id","name","description","price","unit","addDate" FROM "Spare_parts" WHERE "id" like ${id};`;
 });
 
 app.get("/getList", async () => {
-  return await db.$queryRaw`SELECT "id","name","description","price","unit","addDate" FROM "spare_parts";`;
+  return await db.$queryRaw`SELECT "id","name","description","price","unit","addDate" FROM "Spare_parts";`;
 });
 
 app.post(
