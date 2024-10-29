@@ -21,8 +21,9 @@ app.get("/getList", async () => {
   return await db.$queryRaw`SELECT "id","name","credit_limit","address","tax_id","tel","addDate","province" FROM "Customers"`;
 });
 
-app.get("/getByID/:id", async (id: number) => {
-  return await db.$queryRaw`SELECT "id","name","credit_limit","address","tax_id","tel","addDate","province" FROM "Customers" WHERE id = ${id}`;
+app.get("/getByID/:id", async (id: string) => {
+  const id_int = parseInt(id);
+  return await db.$queryRaw`SELECT "id","name","credit_limit","address","tax_id","tel","addDate","province" FROM "Customers" WHERE id = ${id_int}`;
 });
 
 app.get("/getIDbyName/:name", async (name: string) => {
