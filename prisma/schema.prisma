@@ -10,14 +10,14 @@ datasource easy_service {
 
 model Users {
   id                    Int                     @id @default(autoincrement())
-  username              String
-  password              String
-  salt                  String
-  name                  String
-  surname               String
-  address               String
-  province              String
-  role                  String
+  username              String                  @unique @easy_service.VarChar(20)
+  password              String                  @easy_service.VarChar(70)
+  salt                  String                  @easy_service.VarChar(16)
+  name                  String                  @easy_service.VarChar(20)
+  surname               String                  @easy_service.VarChar(20)
+  address               String?                 @easy_service.VarChar(50)
+  province              String                  @easy_service.VarChar(20)
+  role                  String                  @easy_service.VarChar(20)
   addDate               DateTime                @default(now())
   works                 Works[]
   movedItems            Transaction_logs[]      @relation("UserLog")
@@ -27,9 +27,9 @@ model Users {
 
 model Spare_parts {
   id                    Int                    @id @default(autoincrement())
-  name                  String                 @unique()
-  description           String
-  unit                  String
+  name                  String                 @unique() @easy_service.VarChar(40)
+  description           String?                @easy_service.VarChar(100)
+  unit                  String                 @easy_service.VarChar(15)
   price                 Float
   addDate               DateTime               @default(now())
   Spare_parts_requests  Spare_parts_requests[]
@@ -39,25 +39,25 @@ model Spare_parts {
 
 model Customers {
   id           Int      @id @default(autoincrement())
-  name         String
+  name         String   @easy_service.VarChar(30)
   credit_limit Float
-  address      String
-  tax_id       String?
-  tel          String
-  province     String
+  address      String?  @easy_service.VarChar(50)
+  tax_id       String?  @easy_service.VarChar(15)
+  tel          String   @easy_service.VarChar(12)
+  province     String   @easy_service.VarChar(20)
   addDate      DateTime @default(now())
   Works        Works[]
 }
 
 model Works {
-  id              String            @id @default(uuid())
-  mail_date       DateTime
+  id              Int               @id
+  mail_date       DateTime          @default(now())
   service_Date    DateTime?
   status          Int               @default(0)
   userID          Int?              @unique
   customerID      Int               @unique
-  address         String
-  province        String
+  address         String            @easy_service.VarChar(50)
+  province        String            @easy_service.VarChar(20)
   addDate         DateTime          @default(now())
   user_id         Users?            @relation(fields: [userID], references: [id])
   customer_id     Customers         @relation(fields: [customerID], references: [id])
@@ -67,20 +67,20 @@ model Works {
 
 model AdditionalCosts {
   id          Int      @id @default(autoincrement())
-  description String
+  description String   @easy_service.VarChar(100)
   cost        Float
-  workID      String   @unique
+  workID      Int      @unique
   work_id     Works    @relation(fields: [workID], references: [id])
   addDate     DateTime @default(now())
 }
 
 model Requests {
   id                   Int                    @id @default(autoincrement())
-  model                String
-  sn                   String
-  rated                String
+  model                String                 @easy_service.VarChar(20)
+  sn                   String                 @easy_service.VarChar(20)
+  rated                String?                @easy_service.VarChar(10)
   warranty             Boolean
-  workID               String
+  workID               Int
   addDate              DateTime               @default(now())
   Spare_parts_requests Spare_parts_requests[]
   work_id              Works                  @relation(fields: [workID], references: [id])
@@ -92,8 +92,8 @@ model Spare_parts_requests {
   id              Int         @id @default(autoincrement())
   spare_parts_qty Int
   sparePartID     Int         @unique
-  description     String
-  sn              String?
+  description     String      @easy_service.VarChar(100)
+  sn              String?     @easy_service.VarChar(20)
   requestID       Int         @unique
   addDate         DateTime    @default(now())
   spare_parts_id  Spare_parts @relation(fields: [sparePartID], references: [id])

@@ -12,24 +12,35 @@ interface Work {
   customerID: number;
   address: string;
   province: string;
-  userID: string;
+  userID: number;
 }
 
-app.post("/createNewWork", async ({ body }: { body: Work }) => {
-  try {
-    const { mail_date, service_date, customerID, address, province } = body;
-
-    await db.$queryRaw`INSERT INTO "Works" 
-    ("mail_date","service_date","customerID","address","province")
-    VALUES (${mail_date},${service_date},${customerID},${address},${province});`;
-    return "add new work";
-  } catch (error: any) {
-    return {
-      error: "Error while creating work",
-      details: error.message,
-    };
+app.post(
+  "/createNewWork",
+  async ({ body }: { body: Work }) => {
+    try {
+      const { mail_date, service_date, customerID, address, province } = body;
+      await db.$queryRaw`INSERT INTO "Works"
+      ("mail_date","service_date","customerID","address","province")
+      VALUES (${mail_date},${service_date},${customerID},${address},${province});`;
+      return "add new work";
+    } catch (error: any) {
+      return {
+        error: "Error while creating work",
+        details: error.message,
+      };
+    }
+  },
+  {
+    body: t.Object({
+      mail_date: t.Date(),
+      service_date: t.Date(),
+      customerID: t.Number(),
+      address: t.String(),
+      province: t.String(),
+    }),
   }
-});
+);
 
 app.get("/searchByID/:id", async (id) => {
   return await db.$queryRaw`SELECT "id","mail_date","service_date","status","userID","customerID","address","province","inWarranty","addDate" 
