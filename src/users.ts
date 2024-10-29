@@ -28,10 +28,12 @@ app.get("/getUserListWithFilterRole/:role", async (role) => {
   return await db.$queryRaw`SELECT "id","username","name","surname","address","province","role","addDate" FROM "Users" WHERE "role" = ${role};`;
 });
 
-app.get("/login/:username/:password", async ({ params }) => {
-  return await db.$queryRaw`SELECT "id" FROM "Users" WHERE "username" = ${params.username} AND "password" = ${params.password};`;
+app.get("/login/:username/", async ({ params }) => {
+  return await db.$queryRaw`SELECT "password","salt" FROM "Users" WHERE "username" = ${params.username}`;
 });
-
+app.get("/login/:username/:password/:salt", async ({ params }) => {
+  return await db.$queryRaw`SELECT "id" FROM "Users" WHERE "username" = ${params.username} AND "password" = ${params.password} AND "salt" = ${params.salt};`;
+});
 app.get("/getUserListWithFilterProvince", async (province) => {
   return await db.$queryRaw`SELECT "id","username","name","surname","address","province","rold","addDate" FROM 
   "Users" WHERE "province" like ${province}`;
