@@ -15,8 +15,9 @@ interface SparePartEngineerTable {
 }
 app.get("/getFromUserID/:userID", async ({ params }) => {
   const user_id = parseInt(params.userID);
-  return await db.$queryRaw`SELECT "id","spare_part_id","quantity","user_id","addDate"
+  return await db.$queryRaw`SELECT Spare_parts_engineers.id,Spare_parts.name,Spare_parts_engineers.quantity,Spare_parts_engineers.user_id,Spare_parts_engineers.addDate
     FROM "Spare_parts_engineers"
+    JOIN "Spare_parts" ON Spare_parts.id = Spare_parts_engineers.spare_part_id
     WHERE user_id = ${user_id}`;
 });
 
