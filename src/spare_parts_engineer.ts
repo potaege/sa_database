@@ -16,7 +16,7 @@ interface SparePartEngineerTable {
 
 app.get("/getFromUserID/:userID", (user_id) => {
   return db.$queryRaw`SELECT "id","spare_part_id","quantity","user_id","addDate"
-    FROM Spare_parts_engineers 
+    FROM "Spare_parts_engineers "
     WHERE user_id = ${user_id}`;
 });
 
@@ -25,7 +25,7 @@ app.post(
   async ({ body }: { body: SparePartEngineerTable }) => {
     try {
       const { spare_part_id, quantity, user_id } = body;
-      await db.$queryRaw`INSERT INTO Spare_parts_engineers ("spare_part_id", "quantity", "user_id") VALUES (${spare_part_id}, ${quantity}, ${user_id})`;
+      await db.$queryRaw`INSERT INTO "Spare_parts_engineers" ("spare_part_id", "quantity", "user_id") VALUES (${spare_part_id}, ${quantity}, ${user_id})`;
     } catch (error: any) {
       return {
         error: "Error while creating spare parts engineer",
@@ -48,7 +48,7 @@ app.post(
     try {
       const { id, spare_part_id, quantity, user_id } = body;
 
-      await db.$queryRaw`UPDATE Spare_parts_engineers SET "spare_part_id" = ${spare_part_id}, "quantity" = ${quantity}, "user_id" = ${user_id} WHERE "id" = ${id}`;
+      await db.$queryRaw`UPDATE "Spare_parts_engineers" SET "spare_part_id" = ${spare_part_id}, "quantity" = ${quantity}, "user_id" = ${user_id} WHERE "id" = ${id}`;
     } catch (error: any) {
       return {
         error: "Error while editing spare parts engineer",
