@@ -22,8 +22,9 @@ app.get("/getList", async () => {
 });
 
 app.get("/getByID/:id", async ({ params }) => {
-  const id_int = parseInt(params.id);
-  return await db.$queryRaw`SELECT "id","name","credit_limit","address","tax_id","tel","addDate","province" FROM "Customers" WHERE id = ${id_int}`;
+  return await db.$queryRaw`SELECT "id","name","credit_limit","address","tax_id","tel","addDate","province" FROM "Customers" WHERE id = ${parseInt(
+    params.id
+  )}`;
 });
 
 app.get("/getIDbyName/:name", async ({ params }) => {

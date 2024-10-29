@@ -77,6 +77,21 @@ app.post(
   }
 );
 
+app.post(
+  "/deleteAdditionalCost",
+  async ({ body }: { body: Additionalcost }) => {
+    try {
+      const { id } = body;
+      await db.$queryRaw`DELETE FROM "additional_costs" WHERE "id" = ${id}`;
+      return "delete additional cost";
+    } catch (error: any) {
+      return {
+        error: "Error while deleting additional cost",
+        details: error.message,
+      };
+    }
+  }
+);
 //TODO List
 
 export default app;

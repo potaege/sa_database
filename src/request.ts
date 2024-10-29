@@ -13,7 +13,46 @@ interface Request {
   workID: string;
   addedDate: Date;
 }
+app.post("/deleteRequest", async ({ body }: { body: Request }) => {
+  try {
+    const { id } = body;
 
+    await db.$queryRaw`DELETE FROM "Requests" WHERE id = "${id}";`;
+  } catch (error: any) {
+    return {
+      error: "error while delete request",
+      details: error.message,
+    };
+  }
+});
+app.post(
+  "/editRequest",
+  async ({ body }: { body: Request }) => {
+    try {
+      const { id, model, sn, rated, description } = body;
+
+      await db.$queryRaw`UPDATE "Requests" SET "model" = ${model}, "sn" = ${sn}, "rated" = ${rated}, "description" = ${description},  
+      WHERE "id" = ${id}`;
+    } catch (error: any) {
+      return {
+        error: "error while edit request",
+        details: error.message,
+      };
+    }
+  },
+  {
+    body: t.Object({
+      id: t.Number(),
+      model: t.String(),
+      sn: t.String(),
+      rated: t.String(),
+      description: t.String(),
+      warranty: t.Boolean(),
+      workID: t.String(),
+      addedDate: t.Date(),
+    }),
+  }
+);
 app.post(
   "/insertRequest",
   async ({ body }: { body: Request }) => {
@@ -32,7 +71,6 @@ app.post(
   },
   {
     body: t.Object({
-      id: t.Number(),
       model: t.String(),
       sn: t.String(),
       rated: t.String(),
