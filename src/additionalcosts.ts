@@ -1,5 +1,4 @@
-import { Elysia } from "elysia";
-import swagger from "@elysiajs/swagger";
+import { Elysia, t } from "elysia";
 import db from "./db";
 
 const app = new Elysia({
@@ -35,22 +34,46 @@ app.post(
         details: error.message,
       };
     }
+  },
+  {
+    body: t.Object({
+      description: t.String(),
+      cost: t.Number(),
+      amount: t.Number(),
+      unit: t.String(),
+      work_id: t.String(),
+      addDate: t.Date(),
+    }),
   }
 );
 
-app.post("/editAdditionalCost", async ({ body }: { body: Additionalcost }) => {
-  try {
-    const { id, description, cost, amount, unit, work_id } = body;
+app.post(
+  "/editAdditionalCost",
+  async ({ body }: { body: Additionalcost }) => {
+    try {
+      const { id, description, cost, amount, unit, work_id } = body;
 
-    await db.$queryRaw`UPDATE "additional_costs" SET "description" = ${description}, "cost" = ${cost}, "amount" = ${amount}, "unit" = ${unit}, "work_id" = ${work_id} WHERE "id" = ${id}`;
-    return "edit additional cost";
-  } catch (error: any) {
-    return {
-      error: "Error while editing additional cost",
-      details: error.message,
-    };
+      await db.$queryRaw`UPDATE "additional_costs" SET "description" = ${description}, "cost" = ${cost}, "amount" = ${amount}, "unit" = ${unit}, "work_id" = ${work_id} WHERE "id" = ${id}`;
+      return "edit additional cost";
+    } catch (error: any) {
+      return {
+        error: "Error while editing additional cost",
+        details: error.message,
+      };
+    }
+  },
+  {
+    body: t.Object({
+      id: t.Number(),
+      description: t.String(),
+      cost: t.Number(),
+      amount: t.Number(),
+      unit: t.String(),
+      work_id: t.String(),
+      addDate: t.Date(),
+    }),
   }
-});
+);
 
 //TODO List
 

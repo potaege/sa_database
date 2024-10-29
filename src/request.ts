@@ -1,4 +1,4 @@
-import { Elysia } from "elysia";
+import { Elysia, t } from "elysia";
 import db from "./db";
 
 const app = new Elysia({ prefix: "/request", detail: { tags: ["request"] } });
@@ -14,20 +14,35 @@ interface Request {
   addedDate: Date;
 }
 
-app.post("/insertRequest", async ({ body }: { body: Request }) => {
-  try {
-    const { id, model, sn, rated, description, warranty, workID } = body;
+app.post(
+  "/insertRequest",
+  async ({ body }: { body: Request }) => {
+    try {
+      const { id, model, sn, rated, description, warranty, workID } = body;
 
-    await db.$queryRaw`INSERT INTO "Requests"
+      await db.$queryRaw`INSERT INTO "Requests"
     ("model","sn","rated","description","warranty","workID")
     VALUES (${model},${sn},${rated},${description},${warranty},${workID});`;
-  } catch (error: any) {
-    return {
-      error: "error while create request",
-      details: error.message,
-    };
+    } catch (error: any) {
+      return {
+        error: "error while create request",
+        details: error.message,
+      };
+    }
+  },
+  {
+    body: t.Object({
+      id: t.Number(),
+      model: t.String(),
+      sn: t.String(),
+      rated: t.String(),
+      description: t.String(),
+      warranty: t.Boolean(),
+      workID: t.String(),
+      addedDate: t.Date(),
+    }),
   }
-});
+);
 
 app.get("/getByID:/id", async (id) => {
   return await db.$queryRaw`SELECT "id","model","sn","rated","description","warranty","workID","addDate"

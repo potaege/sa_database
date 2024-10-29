@@ -1,4 +1,4 @@
-import { Elysia } from "elysia";
+import { Elysia, t } from "elysia";
 import db from "./db";
 
 const app = new Elysia({
@@ -32,6 +32,15 @@ app.post(
         details: error.message,
       };
     }
+  },
+  {
+    body: t.Object({
+      id: t.Number(),
+      spare_part_id: t.Number(),
+      quantity: t.Number(),
+      user_id: t.Number(),
+      addDate: t.Date(),
+    }),
   }
 );
 
@@ -48,6 +57,15 @@ app.post(
         details: error.message,
       };
     }
+  },
+  {
+    body: t.Object({
+      id: t.Number(),
+      spare_part_id: t.Number(),
+      quantity: t.Number(),
+      user_id: t.Number(),
+      addDate: t.Date(),
+    }),
   }
 );
 // TODO List
