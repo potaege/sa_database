@@ -17,23 +17,10 @@ interface Transaction_log {
   addDate: Date;
 }
 
-app.get(
-  "/getList",
-  async ({ params }) => {
-    return await db.$queryRaw`SELECT "id","spare_parts","quantity","user_id","from_user_id","status","addDate" 
+app.get("/getList", async ({ params }) => {
+  return await db.$queryRaw`SELECT "id","spare_parts","quantity","user_id","from_user_id","status","addDate" 
   FROM "Transaction_logs"`;
-  },
-  {
-    response: t.Object({
-      id: t.Number(),
-      spare_parts: t.Number(),
-      quantity: t.Number(),
-      user_id: t.Number(),
-      from_user_id: t.Number(),
-      status: t.Number(),
-    }),
-  }
-);
+});
 
 app.post(
   "/insertTransactionLog",

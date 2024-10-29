@@ -32,62 +32,17 @@ const encryptWithSalt = (data: string, salt: string): string => {
   return hashed;
 };
 
-app.get(
-  "/searchbyID/:id",
-  async (id) => {
-    return await db.$queryRaw`SELECT "id","username","name","surname","address","province","role","addDate" FROM "Users" WHERE "id" = ${id};`;
-  },
-  {
-    response: t.Object({
-      id: t.Number(),
-      username: t.String(),
-      name: t.String(),
-      surname: t.String(),
-      address: t.String(),
-      province: t.String(),
-      role: t.String(),
-      addDate: t.Date(),
-    }),
-  }
-);
+app.get("/searchbyID/:id", async (id) => {
+  return await db.$queryRaw`SELECT "id","username","name","surname","address","province","role","addDate" FROM "Users" WHERE "id" = ${id};`;
+});
 
-app.get(
-  "/getUserList",
-  async ({ params }) => {
-    return await db.$queryRaw`SELECT "id","username","name","surname","address","province","role","addDate" FROM "Users";`;
-  },
-  {
-    response: t.Object({
-      id: t.Number(),
-      username: t.String(),
-      name: t.String(),
-      surname: t.String(),
-      address: t.String(),
-      province: t.String(),
-      role: t.String(),
-      addDate: t.Date(),
-    }),
-  }
-);
+app.get("/getUserList", async ({ params }) => {
+  return await db.$queryRaw`SELECT "id","username","name","surname","address","province","role","addDate" FROM "Users";`;
+});
 
-app.get(
-  "/getUserListWithFilterRole/:role",
-  async (role) => {
-    return await db.$queryRaw`SELECT "id","username","name","surname","address","province","role","addDate" FROM "Users" WHERE "role" = ${role};`;
-  },
-  {
-    response: t.Object({
-      id: t.Number(),
-      username: t.String(),
-      name: t.String(),
-      surname: t.String(),
-      address: t.String(),
-      province: t.String(),
-      role: t.String(),
-      addDate: t.Date(),
-    }),
-  }
-);
+app.get("/getUserListWithFilterRole/:role", async (role) => {
+  return await db.$queryRaw`SELECT "id","username","name","surname","address","province","role","addDate" FROM "Users" WHERE "role" = ${role};`;
+});
 
 app.post(
   "/login/",

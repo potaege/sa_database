@@ -15,98 +15,36 @@ interface Work {
   userID: string;
 }
 
-app.post(
-  "/createNewWork",
-  async ({ body }: { body: Work }) => {
-    try {
-      const { mail_date, service_date, customerID, address, province } = body;
+app.post("/createNewWork", async ({ body }: { body: Work }) => {
+  try {
+    const { mail_date, service_date, customerID, address, province } = body;
 
-      await db.$queryRaw`INSERT INTO "Works" 
+    await db.$queryRaw`INSERT INTO "Works" 
     ("mail_date","service_date","customerID","address","province")
     VALUES (${mail_date},${service_date},${customerID},${address},${province});`;
-      return "add new work";
-    } catch (error: any) {
-      return {
-        error: "Error while creating work",
-        details: error.message,
-      };
-    }
-  },
-  {
-    body: t.Object({
-      id: t.Number(),
-      mail_date: t.Date(),
-      service_date: t.Date(),
-      status: t.Number(),
-      customerID: t.Number(),
-      address: t.String(),
-      province: t.String(),
-      userID: t.String(),
-    }),
+    return "add new work";
+  } catch (error: any) {
+    return {
+      error: "Error while creating work",
+      details: error.message,
+    };
   }
-);
+});
 
-app.get(
-  "/searchByID/:id",
-  async (id) => {
-    return await db.$queryRaw`SELECT "id","mail_date","service_date","status","userID","customerID","address","province","inWarranty","addDate" 
+app.get("/searchByID/:id", async (id) => {
+  return await db.$queryRaw`SELECT "id","mail_date","service_date","status","userID","customerID","address","province","inWarranty","addDate" 
   FROM "Works" WHERE "id" like ${id}`;
-  },
-  {
-    response: t.Object({
-      id: t.Number(),
-      mail_date: t.Date(),
-      service_date: t.Date(),
-      status: t.Number(),
-      userID: t.String(),
-      customerID: t.Number(),
-      address: t.String(),
-      province: t.String(),
-      inWarranty: t.Boolean(),
-      addDate: t.Date(),
-    }),
-  }
-);
+});
 
-app.get(
-  "/getWorksList",
-  async ({ params }) => {
-    return await db.$queryRaw`SELECT "id","mail_date","service_date","status","userID","customerID","address","province","inWarranty","addDate" 
+app.get("/getWorksList", async ({ params }) => {
+  return await db.$queryRaw`SELECT "id","mail_date","service_date","status","userID","customerID","address","province","inWarranty","addDate" 
   FROM "Works"`;
-  },
-  {
-    response: t.Object({
-      id: t.Number(),
-      mail_date: t.Date(),
-      service_date: t.Date(),
-      status: t.Number(),
-      userID: t.String(),
-      customerID: t.Number(),
-    }),
-  }
-);
+});
 
-app.get(
-  "/getWorksListNotAssigned",
-  async ({ params }) => {
-    return await db.$queryRaw`SELECT "id","mail_date","service_date","status","userID","customerID","address","province","inWarranty","addDate" 
+app.get("/getWorksListNotAssigned", async ({ params }) => {
+  return await db.$queryRaw`SELECT "id","mail_date","service_date","status","userID","customerID","address","province","inWarranty","addDate" 
     FROM "Works" WHERE "userID" IS NULL;`;
-  },
-  {
-    response: t.Object({
-      id: t.Number(),
-      mail_date: t.Date(),
-      service_date: t.Date(),
-      status: t.Number(),
-      userID: t.String(),
-      customerID: t.Number(),
-      address: t.String(),
-      province: t.String(),
-      inWarranty: t.Boolean(),
-      addDate: t.Date(),
-    }),
-  }
-);
+});
 
 app.post(
   "/editWork",
