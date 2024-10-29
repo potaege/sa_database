@@ -14,8 +14,8 @@ interface SparePartEngineerTable {
   addDate: Date;
 }
 
-app.get("/getFromUserID/:userID", (user_id) => {
-  return db.$queryRaw`SELECT "id","spare_part_id","quantity","user_id","addDate"
+app.get("/getFromUserID/:userID", async (user_id) => {
+  return await db.$queryRaw`SELECT "id","spare_part_id","quantity","user_id","addDate"
     FROM "Spare_parts_engineers"
     WHERE user_id = ${user_id}`;
 });
