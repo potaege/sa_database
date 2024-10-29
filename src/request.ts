@@ -44,9 +44,9 @@ app.post(
   }
 );
 
-app.get("/getByID:/id", async (id) => {
+app.get("/getByID/:id", async ({ params }) => {
   return await db.$queryRaw`SELECT "id","model","sn","rated","description","warranty","workID","addDate"
-  FROM "request" WHERE "id" like ${id}`;
+  FROM "request" WHERE "id" = ${parseInt(params.id)}`;
 });
 
 app.get("/getList", async () => {

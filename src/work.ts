@@ -5,7 +5,7 @@ import db from "./db";
 const app = new Elysia({ prefix: "/works", detail: { tags: ["Work"] } });
 
 interface Work {
-  id: string;
+  id: number;
   mail_date: Date;
   service_date: Date;
   status: number;
@@ -42,18 +42,18 @@ app.post(
   }
 );
 
-app.get("/searchByID/:id", async (id) => {
-  return await db.$queryRaw`SELECT "id","mail_date","service_date","status","userID","customerID","address","province","inWarranty","addDate" 
-  FROM "Works" WHERE "id" like ${id}`;
+app.get("/searchByID/:id", async ({ params }) => {
+  return await db.$queryRaw`SELECT "id","mail_date","service_date","status","userID","customerID","address","province","addDate" 
+  FROM "Works" WHERE "id" = ${parseInt(params.id)}`;
 });
 
 app.get("/getWorksList", async ({ params }) => {
-  return await db.$queryRaw`SELECT "id","mail_date","service_date","status","userID","customerID","address","province","inWarranty","addDate" 
+  return await db.$queryRaw`SELECT "id","mail_date","service_date","status","userID","customerID","address","province","addDate" 
   FROM "Works"`;
 });
 
 app.get("/getWorksListNotAssigned", async ({ params }) => {
-  return await db.$queryRaw`SELECT "id","mail_date","service_date","status","userID","customerID","address","province","inWarranty","addDate" 
+  return await db.$queryRaw`SELECT "id","mail_date","service_date","status","userID","customerID","address","province","addDate" 
     FROM "Works" WHERE "userID" IS NULL;`;
 });
 

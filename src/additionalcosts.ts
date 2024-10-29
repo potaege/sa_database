@@ -16,8 +16,10 @@ interface Additionalcost {
   addDate: Date;
 }
 
-app.get("/getFromWorkId/:workid", async (workID) => {
-  return await db.$queryRaw`SELECT "id","description","cost","amount","unit","work_id","addDate" FROM "additional_costs" WHERE "work_id" = ${workID};`;
+app.get("/getFromWorkId/:workid", async ({ params }) => {
+  return await db.$queryRaw`SELECT "id","description","cost","amount","unit","work_id","addDate" FROM "additional_costs" WHERE "work_id" = ${parseInt(
+    params.workid
+  )};`;
 });
 
 app.post(

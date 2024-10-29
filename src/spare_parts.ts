@@ -15,8 +15,10 @@ interface SparePart {
   addDate: Date;
 }
 
-app.get("/getByID/:id", async (id: string) => {
-  return await db.$queryRaw`SELECT "id","name","description","price","unit","addDate" FROM "Spare_parts" WHERE "id" like ${id};`;
+app.get("/getByID/:id", async ({ params }) => {
+  return await db.$queryRaw`SELECT "id","name","description","price","unit","addDate" FROM "Spare_parts" WHERE "id" = ${parseInt(
+    params.id
+  )};`;
 });
 
 app.get("/getList", async () => {

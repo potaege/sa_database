@@ -5,7 +5,7 @@ import db from "./db";
 const app = new Elysia({ prefix: "/user", detail: { tags: ["Users"] } });
 
 interface User {
-  id: string;
+  id: number;
   username: string;
   password: string;
   salt: string;
@@ -32,16 +32,18 @@ const encryptWithSalt = (data: string, salt: string): string => {
   return hashed;
 };
 
-app.get("/searchbyID/:id", async (id) => {
-  return await db.$queryRaw`SELECT "id","username","name","surname","address","province","role","addDate" FROM "Users" WHERE "id" = ${id};`;
+app.get("/searchbyID/:id", async ({ params }) => {
+  return await db.$queryRaw`SELECT "id","username","name","surname","address","province","role","addDate" FROM "Users" WHERE "id" = ${parseInt(
+    params.id
+  )};`;
 });
 
 app.get("/getUserList", async ({ params }) => {
   return await db.$queryRaw`SELECT "id","username","name","surname","address","province","role","addDate" FROM "Users";`;
 });
 
-app.get("/getUserListWithFilterRole/:role", async (role) => {
-  return await db.$queryRaw`SELECT "id","username","name","surname","address","province","role","addDate" FROM "Users" WHERE "role" = ${role};`;
+app.get("/getUserListWithFilterRole/:role", async ({ params }) => {
+  return await db.$queryRaw`SELECT "id","username","name","surname","address","province","role","addDate" FROM "Users" WHERE "role" = ${params.role};`;
 });
 
 app.post(
@@ -85,11 +87,11 @@ app.post(
     }),
   }
 );
-app.get("/getUserListWithFilterProvince", async (province) => {
+app.get("/getUserListWithFilterProvince/:province", async ({ params }) => {
   return await db.$queryRaw`SELECT "id","username","name","surname","address","province","rold","addDate" 
   FROM "Users" 
   WHERE "province" 
-  like ${province}`;
+  like ${params.province}`;
 });
 
 app.post(
@@ -118,7 +120,6 @@ app.post(
       surname: t.String(),
       address: t.String(),
       province: t.String(),
-      role: t.String(),
     }),
   }
 );

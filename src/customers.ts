@@ -21,13 +21,13 @@ app.get("/getList", async () => {
   return await db.$queryRaw`SELECT "id","name","credit_limit","address","tax_id","tel","addDate","province" FROM "Customers"`;
 });
 
-app.get("/getByID/:id", async (id: string) => {
-  const id_int = parseInt(id);
+app.get("/getByID/:id", async ({ params }) => {
+  const id_int = parseInt(params.id);
   return await db.$queryRaw`SELECT "id","name","credit_limit","address","tax_id","tel","addDate","province" FROM "Customers" WHERE id = ${id_int}`;
 });
 
-app.get("/getIDbyName/:name", async (name: string) => {
-  return await db.$queryRaw`SELECT "id" FROM "Customers" WHERE "name" like ${name}`;
+app.get("/getIDbyName/:name", async ({ params }) => {
+  return await db.$queryRaw`SELECT "id" FROM "Customers" WHERE "name" like ${params.name}`;
 });
 
 app.post(

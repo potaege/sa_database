@@ -52,7 +52,7 @@ model Customers {
 model Works {
   id              Int               @id
   mail_date       DateTime          @default(now())
-  service_Date    DateTime?
+  service_date    DateTime?
   status          Int               @default(0)
   userID          Int?              @unique
   customerID      Int               @unique
