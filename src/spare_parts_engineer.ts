@@ -35,11 +35,9 @@ app.post(
   },
   {
     body: t.Object({
-      id: t.Number(),
       spare_part_id: t.Number(),
       quantity: t.Number(),
       user_id: t.Number(),
-      addDate: t.Date(),
     }),
   }
 );
@@ -60,11 +58,9 @@ app.post(
   },
   {
     body: t.Object({
-      id: t.Number(),
       spare_part_id: t.Number(),
       quantity: t.Number(),
       user_id: t.Number(),
-      addDate: t.Date(),
     }),
   }
 );
