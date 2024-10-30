@@ -14,16 +14,27 @@ interface Work {
   province: string;
   userID: number;
 }
-
 app.post(
   "/createNewWork",
   async ({ body }: { body: Work }) => {
     try {
-      const { mail_date, service_date, customerID, address, province } = body;
-      await db.$queryRaw`INSERT INTO "Works"
-      ("mail_date","service_date","customerID","address","province")
-      VALUES (${mail_date},${service_date},${customerID},${address},${province});`;
-      return "add new work";
+      const {
+        mail_date,
+        service_date,
+        status = 0, // default value
+        userID,
+        customerID,
+        address,
+        province,
+      } = body;
+
+      await db.$queryRaw`
+        INSERT INTO "Works"
+        ("mail_date", "service_date", "status", "userID", "customerID", "address", "province")
+        VALUES (${mail_date}, ${service_date}, ${status}, ${userID}, ${customerID}, ${address}, ${province});
+      `;
+
+      return "Added new work";
     } catch (error: any) {
       return {
         error: "Error while creating work",
@@ -34,10 +45,13 @@ app.post(
   {
     body: t.Object({
       mail_date: t.Date(),
-      service_date: t.Date(),
+      service_date: t.Optional(t.Date()),
+      status: t.Optional(t.Number()),
+      userID: t.Optional(t.Number()),
       customerID: t.Number(),
       address: t.String(),
       province: t.String(),
+      addDate: t.Optional(t.Date()),
     }),
   }
 );
