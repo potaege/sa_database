@@ -11,7 +11,7 @@ interface Request {
   description: string;
   warranty: Boolean;
   workID: string;
-  addedDate: Date;
+  add_date: Date;
 }
 app.post("/deleteRequest", async ({ body }: { body: Request }) => {
   try {
@@ -49,7 +49,7 @@ app.post(
       description: t.String(),
       warranty: t.Boolean(),
       workID: t.String(),
-      addedDate: t.Date(),
+      add_date: t.Date(),
     }),
   }
 );
@@ -77,18 +77,18 @@ app.post(
       description: t.String(),
       warranty: t.Boolean(),
       workID: t.String(),
-      addedDate: t.Date(),
+      add_date: t.Date(),
     }),
   }
 );
 
 app.get("/getByID/:id", async ({ params }) => {
-  return await db.$queryRaw`SELECT "id","model","sn","rated","description","warranty","workID","addDate"
+  return await db.$queryRaw`SELECT "id","model","sn","rated","description","warranty","workID","add_date"
   FROM "request" WHERE "id" = ${parseInt(params.id)}`;
 });
 
 app.get("/getList", async () => {
-  return await db.$queryRaw`SELECT "id","model","sn","rated","description","warranty","workID","addDate"
+  return await db.$queryRaw`SELECT "id","model","sn","rated","description","warranty","workID","add_date"
   FROM "request"`;
 });
 

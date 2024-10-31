@@ -14,15 +14,15 @@ interface Customer {
   tax_id: string;
   tel: string;
   province: string;
-  addDate: Date;
+  add_date: Date;
 }
 
 app.get("/getList", async () => {
-  return await db.$queryRaw`SELECT "id","name","credit_limit","address","tax_id","tel","addDate","province" FROM "Customers"`;
+  return await db.$queryRaw`SELECT "id","name","credit_limit","address","tax_id","tel","add_date","province" FROM "Customers"`;
 });
 
 app.get("/getByID/:id", async ({ params }) => {
-  return await db.$queryRaw`SELECT "id","name","credit_limit","address","tax_id","tel","addDate","province" FROM "Customers" WHERE id = ${parseInt(
+  return await db.$queryRaw`SELECT "id","name","credit_limit","address","tax_id","tel","add_date","province" FROM "Customers" WHERE id = ${parseInt(
     params.id
   )}`;
 });

@@ -13,6 +13,7 @@ interface Work {
   address: string;
   province: string;
   userID: number;
+  addDate: Date;
 }
 app.post(
   "/createNewWork",
@@ -27,10 +28,12 @@ app.post(
         province,
       } = body;
 
+      const addDate = new Date(); // ใช้ค่า default เป็นวันที่ปัจจุบัน
+
       await db.$queryRaw`
         INSERT INTO "Works"
-        ("mail_date", "service_date", "status", "customerID", "address", "province")
-        VALUES (${mail_date}, ${service_date}, ${status}, ${customerID}, ${address}, ${province});
+        ("mail_date", "service_date", "status", "customerID", "address", "province", "addDate")
+        VALUES (${mail_date}, ${service_date}, ${status}, ${customerID}, ${address}, ${province}, ${addDate});
       `;
 
       return "Added new work";
