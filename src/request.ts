@@ -9,7 +9,7 @@ interface Request {
   sn: string;
   rated: string;
   description: string;
-  warranty: Boolean;
+  warranty: boolean;
   workID: number;
   add_date: Date;
 }
