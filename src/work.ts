@@ -13,7 +13,7 @@ interface Work {
   address: string;
   province: string;
   userID: number;
-  addDate: Date;
+  add_date: Date;
 }
 app.post(
   "/createNewWork",
@@ -28,12 +28,12 @@ app.post(
         province,
       } = body;
 
-      const addDate = new Date(); // ใช้ค่า default เป็นวันที่ปัจจุบัน
+      const add_date = new Date(); // ใช้ค่า default เป็นวันที่ปัจจุบัน
 
       await db.$queryRaw`
         INSERT INTO "Works"
-        ("mail_date", "service_date", "status", "customerID", "address", "province", "addDate")
-        VALUES (${mail_date}, ${service_date}, ${status}, ${customerID}, ${address}, ${province}, ${addDate});
+        ("mail_date", "service_date", "status", "customerID", "address", "province")
+        VALUES (${mail_date}, ${service_date}, ${status}, ${customerID}, ${address}, ${province});
       `;
 
       return "Added new work";
@@ -53,28 +53,28 @@ app.post(
       customerID: t.Number(),
       address: t.String(),
       province: t.String(),
-      addDate: t.Optional(t.Date()),
+      add_date: t.Optional(t.Date()),
     }),
   }
 );
 
 app.get("/searchByID/:id", async ({ params }) => {
-  return await db.$queryRaw`SELECT "id","mail_date","service_date","status","userID","customerID","address","province","addDate" 
+  return await db.$queryRaw`SELECT "id","mail_date","service_date","status","userID","customerID","address","province","add_date" 
   FROM "Works" WHERE "id" = ${parseInt(params.id)}`;
 });
 
 app.get("/getWorksList", async ({ params }) => {
-  return await db.$queryRaw`SELECT "id","mail_date","service_date","status","userID","customerID","address","province","addDate" 
+  return await db.$queryRaw`SELECT "id","mail_date","service_date","status","userID","customerID","address","province","add_date" 
   FROM "Works"`;
 });
 
 app.get("/getWorksListNotAssigned", async ({ params }) => {
-  return await db.$queryRaw`SELECT "id","mail_date","service_date","status","userID","customerID","address","province","addDate" 
+  return await db.$queryRaw`SELECT "id","mail_date","service_date","status","userID","customerID","address","province","add_date" 
     FROM "Works" WHERE "userID" IS NULL;`;
 });
 
 app.get("/getWorksListByStatus/:status", async ({ params }) => {
-  return await db.$queryRaw`SELECT "id","mail_date","service_date","status","userID","customerID","address","province","addDate" 
+  return await db.$queryRaw`SELECT "id","mail_date","service_date","status","userID","customerID","address","province","add_date" 
     FROM "Works" WHERE "status" = ${parseInt(params.status)}`;
 });
 

@@ -53,7 +53,7 @@ model Customers {
 }
 
 model Works {
-  id           Int       @id
+  id           Int       @id @default(autoincrement())
   userID       Int?
   customerID   Int
   mail_date    DateTime  @default(now())
