@@ -53,18 +53,23 @@ app.post(
     }),
   }
 );
+
 app.post(
   "/insertRequest",
   async ({ body }: { body: Request }) => {
     try {
-      const { id, model, sn, rated, description, warranty, workID } = body;
+      const { model, sn, rated, description, warranty, workID } = body;
 
-      await db.$queryRaw`INSERT INTO "Requests"
-    ("model","sn","rated","description","warranty","workID")
-    VALUES (${model},${sn},${rated},${description},${warranty},${workID});`;
+      await db.$queryRaw`
+        INSERT INTO "Requests"
+        ("model", "sn", "rated", "description", "warranty", "workID" )
+        VALUES (${model}, ${sn}, ${rated}, ${description}, ${warranty}, ${workID} );
+      `;
+
+      return "Request added successfully";
     } catch (error: any) {
       return {
-        error: "error while create Requests",
+        error: "Error while creating Request",
         details: error.message,
       };
     }
@@ -76,8 +81,7 @@ app.post(
       rated: t.String(),
       description: t.String(),
       warranty: t.Boolean(),
-      workID: t.String(),
-      add_date: t.Date(),
+      workID: t.Number(),
     }),
   }
 );

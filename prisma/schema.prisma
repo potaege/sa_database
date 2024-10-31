@@ -85,13 +85,14 @@ model AdditionalCosts {
 }
 
 model Requests {
-  id       Int      @id @default(autoincrement())
-  model    String   @easy_service.VarChar(20)
-  sn       String   @easy_service.VarChar(20)
-  rated    String?  @easy_service.VarChar(10)
-  warranty Boolean
-  workID   Int
-  add_date DateTime @default(now())
+  id          Int      @id @default(autoincrement())
+  model       String   @easy_service.VarChar(20)
+  sn          String   @easy_service.VarChar(20)
+  rated       String?  @easy_service.VarChar(10)
+  description String?  @easy_service.VarChar(100)
+  warranty    Boolean
+  workID      Int
+  add_date    DateTime @default(now())
 
   work_id              Works                  @relation(fields: [workID], references: [id])
   Spare_parts_requests Spare_parts_requests[]
