@@ -10,7 +10,7 @@ interface Request {
   rated: string;
   description: string;
   warranty: Boolean;
-  workID: string;
+  workID: number;
   add_date: Date;
 }
 app.post("/deleteRequest", async ({ body }: { body: Request }) => {
