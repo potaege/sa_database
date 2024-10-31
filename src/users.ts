@@ -98,11 +98,11 @@ app.post(
   "/addNewUser",
   async ({ body }: { body: User }) => {
     try {
-      const { username, password, name, surname, address, province, role } =
+      const { username, password, name, surname, address, province } =
         body;
       const salt = generateSalt();
       const hashed = encryptWithSalt(password, salt);
-      await db.$queryRaw`INSERT INTO "Users" ("username","password","salt","name","surname","address","province","role") VALUES (${username},${hashed},${salt},${name},${surname},${address},${province},${role})`;
+      await db.$queryRaw`INSERT INTO "Users" ("username","password","salt","name","surname","address","province","role") VALUES (${username},${hashed},${salt},${name},${surname},${address},${province},'user')`;
 
       return "add new users";
     } catch (error: any) {

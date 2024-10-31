@@ -62,15 +62,26 @@ app.post(
 );
 
 app.post(
-  "/editCustomer",
-  async ({ body }: { body: Customer }) => {
+  "/edit",
+  async ({body}) => {
     try {
-      const { id, name, credit_limit, address, tax_id, tel, province } = body;
+      const customerList: Customer[] =
+        await db.$queryRaw`SELECT "id","name","credit_limit","address","tax_id","tel","province" FROM "Customers" WHERE "id" = ${body.id} LIMIT 1`;
+      const customer: Customer = customerList[0];
 
-      await db.$queryRaw`UPDATE "Customers" SET "name" = ${name},"credit_limit" = ${credit_limit}, address = ${address}, "tax_id" = ${tax_id}, "tel" = ${tel}, "province" = ${province}
-    WHERE "id" like ${id} `;
+      await db.$queryRaw`
+      UPDATE "Customers" 
+      SET "name" = ${body.name || customer.name},"credit_limit" = ${body.credit_limit || customer.credit_limit}, address = ${body.address || customer.address}, "tax_id" = ${body.tax_id || customer.tax_id}, "tel" = ${body.tel || customer.tel}, "province" = ${body.province || customer.province}
+      WHERE "id" = ${body.id} 
+      `;
 
-      return "editing users data";
+      return {
+        message: "User data updated",
+        data: {
+          id: body.id,
+          name: body.name || customer.name,
+        }
+      }
     } catch (error: any) {
       return {
         error: "Error while editing user data",
@@ -81,12 +92,12 @@ app.post(
   {
     body: t.Object({
       id: t.Number(),
-      name: t.String(),
-      credit_limit: t.Number(),
-      address: t.String(),
-      tax_id: t.String(),
-      tel: t.String(),
-      province: t.String(),
+      name: t.Optional(t.String()),
+      credit_limit: t.Optional(t.Number()),
+      address: t.Optional(t.String()),
+      tax_id: t.Optional(t.String()),
+      tel: t.Optional(t.String()),
+      province: t.Optional(t.String()),
     }),
   }
 );
