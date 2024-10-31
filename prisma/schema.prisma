@@ -10,7 +10,7 @@ datasource easy_service {
 
 model Users {
   id                    Int                     @id @default(autoincrement())
-  username              String                  @unique @easy_service.VarChar(20)
+  username              String                  @easy_service.VarChar(20)
   password              String                  @easy_service.VarChar(70)
   salt                  String                  @easy_service.VarChar(16)
   name                  String                  @easy_service.VarChar(20)
@@ -52,7 +52,7 @@ model Customers {
 model Works {
   id              Int               @id
   mail_date       DateTime          @default(now())
-  service_date    DateTime?
+  service_date    DateTime?         @easy_service.Date
   status          Int               @default(0)
   userID          Int?              @unique
   customerID      Int               @unique

@@ -22,7 +22,6 @@ app.post(
         mail_date,
         service_date,
         status = 0, // default value
-        userID,
         customerID,
         address,
         province,
@@ -30,8 +29,8 @@ app.post(
 
       await db.$queryRaw`
         INSERT INTO "Works"
-        ("mail_date", "service_date", "status", "userID", "customerID", "address", "province")
-        VALUES (${mail_date}, ${service_date}, ${status}, ${userID}, ${customerID}, ${address}, ${province});
+        ("mail_date", "service_date", "status", "customerID", "address", "province")
+        VALUES (${mail_date}, ${service_date}, ${status}, ${customerID}, ${address}, ${province});
       `;
 
       return "Added new work";
