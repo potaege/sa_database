@@ -58,6 +58,11 @@ app.post(
   }
 );
 
+app.get("getLastWork", async () => {
+  return await db.$queryRaw`SELECT "id","mail_date","service_date","status","userID","customerID","address","province","add_date" 
+    FROM "Works" ORDER BY "id" DESC LIMIT 1`;
+});
+
 app.get("/searchByID/:id", async ({ params }) => {
   return await db.$queryRaw`SELECT "id","mail_date","service_date","status","userID","customerID","address","province","add_date" 
   FROM "Works" WHERE "id" = ${parseInt(params.id)}`;
