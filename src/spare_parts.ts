@@ -12,17 +12,17 @@ interface SparePart {
   description: string;
   price: number;
   unit: string;
-  addDate: Date;
+  add_date: Date;
 }
 
 app.get("/getByID/:id", async ({ params }) => {
-  return await db.$queryRaw`SELECT "id","name","description","price","unit","addDate" FROM "Spare_parts" WHERE "id" = ${parseInt(
+  return await db.$queryRaw`SELECT "id","name","description","price","unit","add_date" FROM "Spare_parts" WHERE "id" = ${parseInt(
     params.id
   )};`;
 });
 
 app.get("/getList", async () => {
-  return await db.$queryRaw`SELECT "id","name","description","price","unit","addDate" FROM "Spare_parts";`;
+  return await db.$queryRaw`SELECT "id","name","description","price","unit","add_date" FROM "Spare_parts";`;
 });
 
 app.post(

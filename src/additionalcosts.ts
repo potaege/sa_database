@@ -13,11 +13,11 @@ interface Additionalcost {
   amount: number;
   unit: string;
   work_id: string;
-  addDate: Date;
+  add_date: Date;
 }
 
 app.get("/getFromWorkId/:workid", async ({ params }) => {
-  return await db.$queryRaw`SELECT "id","description","cost","amount","unit","work_id","addDate" FROM "additional_costs" WHERE "work_id" = ${parseInt(
+  return await db.$queryRaw`SELECT "id","description","cost","amount","unit","work_id","add_date" FROM "additional_costs" WHERE "work_id" = ${parseInt(
     params.workid
   )};`;
 });
@@ -44,7 +44,7 @@ app.post(
       amount: t.Number(),
       unit: t.String(),
       work_id: t.String(),
-      addDate: t.Date(),
+      add_date: t.Date(),
     }),
   }
 );
@@ -72,7 +72,7 @@ app.post(
       amount: t.Number(),
       unit: t.String(),
       work_id: t.String(),
-      addDate: t.Date(),
+      add_date: t.Date(),
     }),
   }
 );

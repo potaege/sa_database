@@ -14,7 +14,7 @@ interface User {
   address: string;
   province: string;
   role: string;
-  addDate: Date;
+  add_date: Date;
 }
 
 const generateSalt = (length: number = 16): string => {
@@ -33,17 +33,17 @@ const encryptWithSalt = (data: string, salt: string): string => {
 };
 
 app.get("/searchbyID/:id", async ({ params }) => {
-  return await db.$queryRaw`SELECT "id","username","name","surname","address","province","role","addDate" FROM "Users" WHERE "id" = ${parseInt(
+  return await db.$queryRaw`SELECT "id","username","name","surname","address","province","role","add_date" FROM "Users" WHERE "id" = ${parseInt(
     params.id
   )};`;
 });
 
 app.get("/getUserList", async ({ params }) => {
-  return await db.$queryRaw`SELECT "id","username","name","surname","address","province","role","addDate" FROM "Users";`;
+  return await db.$queryRaw`SELECT "id","username","name","surname","address","province","role","add_date" FROM "Users";`;
 });
 
 app.get("/getUserListWithFilterRole/:role", async ({ params }) => {
-  return await db.$queryRaw`SELECT "id","username","name","surname","address","province","role","addDate" FROM "Users" WHERE "role" = ${params.role};`;
+  return await db.$queryRaw`SELECT "id","username","name","surname","address","province","role","add_date" FROM "Users" WHERE "role" = ${params.role};`;
 });
 
 app.post(
@@ -59,7 +59,7 @@ app.post(
 
       if (authen[0].password === hashedInput) {
         const user: User[] =
-          await db.$queryRaw`SELECT "id","username","name","surname","address","province","role","addDate" FROM "Users" where "username" = ${username}`;
+          await db.$queryRaw`SELECT "id","username","name","surname","address","province","role","add_date" FROM "Users" where "username" = ${username}`;
         return {
           payload: user[0].id,
           error: "",
@@ -88,7 +88,7 @@ app.post(
   }
 );
 app.get("/getUserListWithFilterProvince/:province", async ({ params }) => {
-  return await db.$queryRaw`SELECT "id","username","name","surname","address","province","rold","addDate" 
+  return await db.$queryRaw`SELECT "id","username","name","surname","address","province","rold","add_date" 
   FROM "Users" 
   WHERE "province" 
   like ${params.province}`;

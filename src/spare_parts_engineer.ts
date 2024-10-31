@@ -11,10 +11,10 @@ interface SparePartEngineerTable {
   spare_part_id: number;
   quantity: number;
   user_id: number;
-  addDate: Date;
+  add_date: Date;
 }
 app.get("/getFromUserID/:userID", async ({ params }) => {
-  return await db.$queryRaw`SELECT Spare_parts_engineers.id,Spare_parts.name,Spare_parts_engineers.quantity,Spare_parts_engineers.user_id,Spare_parts_engineers."addDate"
+  return await db.$queryRaw`SELECT Spare_parts_engineers.id,Spare_parts.name,Spare_parts_engineers.quantity,Spare_parts_engineers.user_id,Spare_parts_engineers."add_date"
     FROM "Spare_parts_engineers" AS Spare_parts_engineers
     JOIN "Spare_parts" AS Spare_parts ON Spare_parts.id = Spare_parts_engineers.spare_part_id
     WHERE Spare_parts_engineers."user_id" = ${parseInt(params.userID)}`;

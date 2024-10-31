@@ -18,7 +18,7 @@ const app = new Elysia({
 });
 
 app.get("/getListInRequest/:request_id", async ({ params }) => {
-  return await db.$queryRaw`SELECT Spare_parts_request.id, Spare_parts_request.request_id,Spare_parts_request.name, Spare_parts_request.spare_part_qty,Spare_parts_request.price,Spare_parts_request.description, Spare_parts_request.addDate
+  return await db.$queryRaw`SELECT Spare_parts_request.id, Spare_parts_request.request_id,Spare_parts_request.name, Spare_parts_request.spare_part_qty,Spare_parts_request.price,Spare_parts_request.description, Spare_parts_request.add_date
   FROM Spare_parts_request
   JOIN Spare_parts ON Spare_parts_request.spare_part_id = Spare_parts.id
   WHERE Spare_parts_request.request_id IN (SELECT request_id FROM Requests WHERE request_id = ${parseInt(

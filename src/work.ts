@@ -13,17 +13,30 @@ interface Work {
   address: string;
   province: string;
   userID: number;
+  add_date: Date;
 }
-
 app.post(
   "/createNewWork",
   async ({ body }: { body: Work }) => {
     try {
-      const { mail_date, service_date, customerID, address, province } = body;
-      await db.$queryRaw`INSERT INTO "Works"
-      ("mail_date","service_date","customerID","address","province")
-      VALUES (${mail_date},${service_date},${customerID},${address},${province});`;
-      return "add new work";
+      const {
+        mail_date,
+        service_date,
+        status = 0, // default value
+        customerID,
+        address,
+        province,
+      } = body;
+
+      const add_date = new Date(); // ใช้ค่า default เป็นวันที่ปัจจุบัน
+
+      await db.$queryRaw`
+        INSERT INTO "Works"
+        ("mail_date", "service_date", "status", "customerID", "address", "province")
+        VALUES (${mail_date}, ${service_date}, ${status}, ${customerID}, ${address}, ${province});
+      `;
+
+      return "Added new work";
     } catch (error: any) {
       return {
         error: "Error while creating work",
@@ -34,31 +47,34 @@ app.post(
   {
     body: t.Object({
       mail_date: t.Date(),
-      service_date: t.Date(),
+      service_date: t.Optional(t.Date()),
+      status: t.Optional(t.Number()),
+      userID: t.Optional(t.Number()),
       customerID: t.Number(),
       address: t.String(),
       province: t.String(),
+      add_date: t.Optional(t.Date()),
     }),
   }
 );
 
 app.get("/searchByID/:id", async ({ params }) => {
-  return await db.$queryRaw`SELECT "id","mail_date","service_date","status","userID","customerID","address","province","addDate" 
+  return await db.$queryRaw`SELECT "id","mail_date","service_date","status","userID","customerID","address","province","add_date" 
   FROM "Works" WHERE "id" = ${parseInt(params.id)}`;
 });
 
 app.get("/getWorksList", async ({ params }) => {
-  return await db.$queryRaw`SELECT "id","mail_date","service_date","status","userID","customerID","address","province","addDate" 
+  return await db.$queryRaw`SELECT "id","mail_date","service_date","status","userID","customerID","address","province","add_date" 
   FROM "Works"`;
 });
 
 app.get("/getWorksListNotAssigned", async ({ params }) => {
-  return await db.$queryRaw`SELECT "id","mail_date","service_date","status","userID","customerID","address","province","addDate" 
+  return await db.$queryRaw`SELECT "id","mail_date","service_date","status","userID","customerID","address","province","add_date" 
     FROM "Works" WHERE "userID" IS NULL;`;
 });
 
 app.get("/getWorksListByStatus/:status", async ({ params }) => {
-  return await db.$queryRaw`SELECT "id","mail_date","service_date","status","userID","customerID","address","province","addDate" 
+  return await db.$queryRaw`SELECT "id","mail_date","service_date","status","userID","customerID","address","province","add_date" 
     FROM "Works" WHERE "status" = ${parseInt(params.status)}`;
 });
 

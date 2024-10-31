@@ -8,12 +8,35 @@ datasource easy_service {
   relationMode = "prisma"
 }
 
-model AdditionalCosts {
+model Users {
+  id       Int      @id @default(autoincrement())
+  username String   @easy_service.VarChar(20)
+  password String   @easy_service.VarChar(70)
+  salt     String   @easy_service.VarChar(16)
+  name     String   @easy_service.VarChar(20)
+  surname  String   @easy_service.VarChar(20)
+  address  String?  @easy_service.VarChar(50)
+  province String   @easy_service.VarChar(20)
+  role     String   @easy_service.VarChar(20)
+  add_date DateTime @default(now())
+
+  works                 Works[]
+  movedItems            Transaction_logs[]      @relation("UserLog")
+  receivedItems         Transaction_logs[]      @relation("FromUserLog")
+  Spare_parts_engineers Spare_parts_engineers[]
+}
+
+model Spare_parts {
   id          Int      @id @default(autoincrement())
-  description String   @easy_service.VarChar(100)
-  cost        Float
-  addDate     DateTime @default(now())
-  workID      Int      @unique
+  name        String   @unique() @easy_service.VarChar(40)
+  description String?  @easy_service.VarChar(100)
+  unit        String   @easy_service.VarChar(15)
+  price       Float
+  add_date    DateTime @default(now())
+
+  Spare_parts_requests  Spare_parts_requests[]
+  Transaction_logs      Transaction_logs[]
+  Spare_parts_engineers Spare_parts_engineers[]
 }
 
 model Customers {
@@ -24,7 +47,41 @@ model Customers {
   tax_id       String?  @easy_service.VarChar(15)
   tel          String   @easy_service.VarChar(12)
   province     String   @easy_service.VarChar(20)
-  addDate      DateTime @default(now())
+  add_date     DateTime @default(now())
+
+  Works Works[]
+}
+
+model Works {
+  id           Int       @id @default(autoincrement())
+  userID       Int?
+  customerID   Int
+  mail_date    DateTime  @default(now())
+  service_date DateTime? @easy_service.Date
+  status       Int       @default(0)
+  address      String    @easy_service.VarChar(50)
+  province     String    @easy_service.VarChar(20)
+  add_date     DateTime  @default(now())
+
+  user_id         Users?            @relation(fields: [userID], references: [id])
+  customer_id     Customers         @relation(fields: [customerID], references: [id])
+  Requests        Requests[]
+  AdditionalCosts AdditionalCosts[]
+
+  @@index([customerID])
+  @@index([userID])
+}
+
+model AdditionalCosts {
+  id          Int      @id @default(autoincrement())
+  workID      Int
+  description String   @easy_service.VarChar(100)
+  cost        Float
+  add_date    DateTime @default(now())
+
+  work_id Works @relation(fields: [workID], references: [id])
+
+  @@index([workID])
 }
 
 model Requests {
@@ -33,70 +90,59 @@ model Requests {
   sn       String   @easy_service.VarChar(20)
   rated    String?  @easy_service.VarChar(10)
   warranty Boolean
-  addDate  DateTime @default(now())
   workID   Int
+  add_date DateTime @default(now())
+
+  work_id              Works                  @relation(fields: [workID], references: [id])
+  Spare_parts_requests Spare_parts_requests[]
 
   @@index([workID])
 }
 
-model Spare_parts {
-  id          Int      @id @default(autoincrement())
-  name        String   @unique @easy_service.VarChar(40)
-  description String?  @easy_service.VarChar(100)
-  price       Float
-  addDate     DateTime @default(now())
-  unit        String   @easy_service.VarChar(15)
-}
-
-model Spare_parts_engineers {
-  id            Int      @id @default(autoincrement())
-  spare_part_id Int      @unique
-  quantity      Int
-  addDate       DateTime @default(now())
-  user_id       Int      @unique
-}
-
 model Spare_parts_requests {
   id              Int      @id @default(autoincrement())
+  sparePartID     Int
+  requestID       Int
   spare_parts_qty Int
-  sparePartID     Int      @unique
-  description     String   @easy_service.VarChar(100)
+  description     String?  @easy_service.VarChar(100)
   sn              String?  @easy_service.VarChar(20)
-  requestID       Int      @unique
-  addDate         DateTime @default(now())
+  add_date        DateTime @default(now())
+
+  spare_parts_id Spare_parts @relation(fields: [sparePartID], references: [id])
+  request_id     Requests    @relation(fields: [requestID], references: [id])
+
+  @@index([sparePartID])
+  @@index([requestID])
 }
 
 model Transaction_logs {
   id          Int      @id @default(autoincrement())
+  sparePartID Int
+  userID      Int
+  fromUserID  Int
   quantity    Int
   status      Int      @default(0)
-  sparePartID Int      @unique
-  userID      Int      @unique
-  fromUserID  Int      @unique
-  addDate     DateTime @default(now())
+  add_date    DateTime @default(now())
+
+  spare_part_id Spare_parts @relation(fields: [sparePartID], references: [id])
+  user_id       Users       @relation("UserLog", fields: [userID], references: [id])
+  rom_user_idf  Users       @relation("FromUserLog", fields: [fromUserID], references: [id])
+
+  @@index([sparePartID])
+  @@index([userID])
+  @@index([fromUserID])
 }
 
-model Users {
-  id       Int      @id @default(autoincrement())
-  username String   @unique @easy_service.VarChar(20)
-  password String   @easy_service.VarChar(70)
-  name     String   @easy_service.VarChar(20)
-  surname  String   @easy_service.VarChar(20)
-  address  String?  @easy_service.VarChar(50)
-  province String   @easy_service.VarChar(20)
-  role     String   @easy_service.VarChar(20)
-  addDate  DateTime @default(now())
-  salt     String   @easy_service.VarChar(16)
-}
+model Spare_parts_engineers {
+  id            Int      @id @default(autoincrement())
+  spare_part_id Int
+  user_id       Int
+  quantity      Int
+  add_date      DateTime @default(now())
 
-model Works {
-  mail_date    DateTime  @default(now())
-  status       Int       @default(0)
-  userID       Int?      @unique
-  customerID   Int       @unique
-  address      String    @easy_service.VarChar(50)
-  province     String    @easy_service.VarChar(20)
-  addDate      DateTime  @default(now())
-  id           Int       @id
-  service_date DateTime?
+  user       Users       @relation(fields: [user_id], references: [id])
+  spare_part Spare_parts @relation(fields: [spare_part_id], references: [id])
+
+  @@index([user_id])
+  @@index([spare_part_id])
 }
