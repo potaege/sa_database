@@ -1,7 +1,7 @@
 import { Elysia, t } from "elysia";
 import db from "./db";
 
-const app = new Elysia({ prefix: "/request", detail: { tags: ["request"] } });
+const app = new Elysia({ prefix: "/Requests", detail: { tags: ["Requests"] } });
 
 interface Request {
   id: number;
@@ -20,7 +20,7 @@ app.post("/deleteRequest", async ({ body }: { body: Request }) => {
     await db.$queryRaw`DELETE FROM "Requests" WHERE id = "${id}";`;
   } catch (error: any) {
     return {
-      error: "error while delete request",
+      error: "error while delete Requests",
       details: error.message,
     };
   }
@@ -35,7 +35,7 @@ app.post(
       WHERE "id" = ${id}`;
     } catch (error: any) {
       return {
-        error: "error while edit request",
+        error: "error while edit Requests",
         details: error.message,
       };
     }
@@ -64,7 +64,7 @@ app.post(
     VALUES (${model},${sn},${rated},${description},${warranty},${workID});`;
     } catch (error: any) {
       return {
-        error: "error while create request",
+        error: "error while create Requests",
         details: error.message,
       };
     }
@@ -84,12 +84,12 @@ app.post(
 
 app.get("/getByID/:id", async ({ params }) => {
   return await db.$queryRaw`SELECT "id","model","sn","rated","description","warranty","workID","add_date"
-  FROM "request" WHERE "id" = ${parseInt(params.id)}`;
+  FROM "Requests" WHERE "id" = ${parseInt(params.id)}`;
 });
 
 app.get("/getList", async () => {
   return await db.$queryRaw`SELECT "id","model","sn","rated","description","warranty","workID","add_date"
-  FROM "request"`;
+  FROM "Requests"`;
 });
 
 // TODO List
