@@ -66,7 +66,7 @@ app.post(
 );
 
 app.post(
-  "/edit",
+  "/editcustomers",
   async ({ body }) => {
     try {
       const customerList: Customer[] =

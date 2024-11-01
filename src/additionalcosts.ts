@@ -12,7 +12,7 @@ interface Additionalcost {
   cost: number;
   amount: number;
   unit: string;
-  work_id: string;
+  work_id: number;
   add_date: Date;
 }
 
@@ -43,7 +43,7 @@ app.post(
       cost: t.Number(),
       amount: t.Number(),
       unit: t.String(),
-      work_id: t.String(),
+      work_id: t.Number(),
       add_date: t.Date(),
     }),
   }
@@ -71,7 +71,7 @@ app.post(
       cost: t.Number(),
       amount: t.Number(),
       unit: t.String(),
-      work_id: t.String(),
+      work_id: t.Number(),
       add_date: t.Date(),
     }),
   }

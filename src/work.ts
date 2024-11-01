@@ -107,7 +107,7 @@ app.post(
       customerID: t.Number(),
       address: t.String(),
       province: t.String(),
-      userID: t.String(),
+      userID: t.Number(),
     }),
   }
 );
@@ -129,7 +129,7 @@ app.post(
   {
     body: t.Object({
       id: t.Number(),
-      userID: t.String(),
+      userID: t.Number(),
     }),
   }
 );
