@@ -96,5 +96,10 @@ app.get("/getList", async () => {
   FROM "Requests"`;
 });
 
+app.get("/getListByWorkID/:workID", async ({ params }) => {
+  return await db.$queryRaw`SELECT "id","model","sn","rated","description","warranty","workID","add_date"
+  FROM "Requests" WHERE "workID" = ${parseInt(params.workID)}`;
+});
+
 // TODO List
 export default app;
