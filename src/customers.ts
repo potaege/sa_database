@@ -26,9 +26,13 @@ app.get("/getByID/:id", async ({ params }) => {
     params.id
   )}`;
 });
-
 app.get("/getIDbyName/:name", async ({ params }) => {
-  return await db.$queryRaw`SELECT "id" FROM "Customers" WHERE "name" like ${params.name}`;
+  var re = /%20/g;
+  var name = params.name.replace(re, " ");
+
+  return await db.$queryRaw`
+    SELECT "id" FROM "Customers" WHERE "name" LIKE ${name}
+  `;
 });
 
 app.post(
@@ -63,7 +67,7 @@ app.post(
 
 app.post(
   "/edit",
-  async ({body}) => {
+  async ({ body }) => {
     try {
       const customerList: Customer[] =
         await db.$queryRaw`SELECT "id","name","credit_limit","address","tax_id","tel","province" FROM "Customers" WHERE "id" = ${body.id} LIMIT 1`;
@@ -71,7 +75,13 @@ app.post(
 
       await db.$queryRaw`
       UPDATE "Customers" 
-      SET "name" = ${body.name || customer.name},"credit_limit" = ${body.credit_limit || customer.credit_limit}, address = ${body.address || customer.address}, "tax_id" = ${body.tax_id || customer.tax_id}, "tel" = ${body.tel || customer.tel}, "province" = ${body.province || customer.province}
+      SET "name" = ${body.name || customer.name},"credit_limit" = ${
+        body.credit_limit || customer.credit_limit
+      }, address = ${body.address || customer.address}, "tax_id" = ${
+        body.tax_id || customer.tax_id
+      }, "tel" = ${body.tel || customer.tel}, "province" = ${
+        body.province || customer.province
+      }
       WHERE "id" = ${body.id} 
       `;
 
@@ -80,8 +90,8 @@ app.post(
         data: {
           id: body.id,
           name: body.name || customer.name,
-        }
-      }
+        },
+      };
     } catch (error: any) {
       return {
         error: "Error while editing user data",
