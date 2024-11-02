@@ -71,7 +71,6 @@ app.post(
       amount: t.Number(),
       unit: t.String(),
       work_id: t.Number(),
-      add_date: t.Date(),
     }),
   }
 );
@@ -89,6 +88,11 @@ app.post(
         details: error.message,
       };
     }
+  },
+  {
+    body: t.Object({
+      id: t.Number(),
+    }),
   }
 );
 //TODO List
