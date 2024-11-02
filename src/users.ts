@@ -46,6 +46,10 @@ app.get("/getUserListWithFilterRole/:role", async ({ params }) => {
   return await db.$queryRaw`SELECT "id","username","name","surname","address","province","role","add_date" FROM "Users" WHERE "role" = ${params.role};`;
 });
 
+app.get("/getUserListWithNameAndSurname/:name/:surname", async ({ params }) => {
+  return await db.$queryRaw`SELECT "id","username","name","surname","address","province","role","add_date" FROM "Users" WHERE "name" = ${params.name} AND "surname" = ${params.surname};`;
+});
+
 app.post(
   "/login/",
   async ({ body }: { body: User }) => {
