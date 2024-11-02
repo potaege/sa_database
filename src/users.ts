@@ -98,8 +98,7 @@ app.post(
   "/addNewUser",
   async ({ body }: { body: User }) => {
     try {
-      const { username, password, name, surname, address, province } =
-        body;
+      const { username, password, name, surname, address, province } = body;
       const salt = generateSalt();
       const hashed = encryptWithSalt(password, salt);
       await db.$queryRaw`INSERT INTO "Users" ("username","password","salt","name","surname","address","province","role") VALUES (${username},${hashed},${salt},${name},${surname},${address},${province},'user')`;
@@ -152,6 +151,35 @@ app.post(
       address: t.String(),
       province: t.String(),
       role: t.String(),
+    }),
+  }
+);
+
+app.post(
+  "/addNewAdmin",
+  async ({ body }: { body: User }) => {
+    try {
+      const { username, password, name, surname, address, province } = body;
+      const salt = generateSalt();
+      const hashed = encryptWithSalt(password, salt);
+      await db.$queryRaw`INSERT INTO "Users" ("username","password","salt","name","surname","address","province","role") VALUES (${username},${hashed},${salt},${name},${surname},${address},${province},'admin')`;
+
+      return "add new users";
+    } catch (error: any) {
+      return {
+        error: "Error while creating user",
+        details: error.message,
+      };
+    }
+  },
+  {
+    body: t.Object({
+      username: t.String(),
+      password: t.String(),
+      name: t.String(),
+      surname: t.String(),
+      address: t.String(),
+      province: t.String(),
     }),
   }
 );
