@@ -1,7 +1,7 @@
 import { Elysia, t } from "elysia";
 import db from "./db";
 
-interface Spare_parts_request {
+interface Spare_parts_requests {
   id: number;
   request_id: number;
   spare_part_id: number;
@@ -13,28 +13,28 @@ interface Spare_parts_request {
 }
 
 const app = new Elysia({
-  prefix: "/spare_parts_request",
+  prefix: "/Spare_parts_requests",
   detail: { tags: ["Spare Parts Request"] },
 });
 
 app.get("/getListInRequest/:request_id", async ({ params }) => {
-  return await db.$queryRaw`SELECT Spare_parts_request.id, Spare_parts_request.request_id,Spare_parts_request.name, Spare_parts_request.spare_part_qty,Spare_parts_request.price,Spare_parts_request.description, Spare_parts_request.add_date
-  FROM Spare_parts_request
-  JOIN Spare_parts ON Spare_parts_request.spare_part_id = Spare_parts.id
-  WHERE Spare_parts_request.request_id IN (SELECT request_id FROM Requests WHERE request_id = ${parseInt(
+  return await db.$queryRaw`SELECT Spare_parts_requests.id, Spare_parts_requests.request_id,Spare_parts_requests.name, Spare_parts_requests.spare_part_qty,Spare_parts_requests.price,Spare_parts_requests.description, Spare_parts_requests.add_date
+  FROM Spare_parts_requests
+  JOIN Spare_parts ON Spare_parts_requests.spare_part_id = Spare_parts.id
+  WHERE Spare_parts_requests.request_id IN (SELECT request_id FROM Requests WHERE request_id = ${parseInt(
     params.request_id
   )})`;
 });
 
 app.get("/getById/:id", async ({ params }) => {
-  return await db.$queryRaw`SELECT "id","request_id", "spare_parts_id", "spare_parts_qty","price","description","add_date","sn" FROM "Spare_parts_request" WHERE id = ${parseInt(
+  return await db.$queryRaw`SELECT "id","request_id", "spare_parts_id", "spare_parts_qty","price","description","add_date","sn" FROM "Spare_parts_requests" WHERE id = ${parseInt(
     params.id
   )}`;
 });
 
 app.post(
   "/insertNewSparePartsRequest",
-  async ({ body }: { body: Spare_parts_request }) => {
+  async ({ body }: { body: Spare_parts_requests }) => {
     try {
       const {
         request_id,
@@ -45,7 +45,7 @@ app.post(
         sn,
       } = body;
 
-      await db.$queryRaw`INSERT INTO Spare_parts_request ("request_id", "spare_part_id", "spare_part_qty","price","description","sn")
+      await db.$queryRaw`INSERT INTO "Spare_parts_requests" ("request_id", "spare_part_id", "spare_part_qty","price","description","sn")
       VALUES (${request_id}, ${spare_part_id}, ${spare_part_qty}, ${price}, ${description}, ${sn})`;
 
       return "add new Spare_parts request";
@@ -70,11 +70,11 @@ app.post(
 
 app.post(
   "/editSparePartsRequest",
-  async ({ body }: { body: Spare_parts_request }) => {
+  async ({ body }: { body: Spare_parts_requests }) => {
     try {
       const { spare_part_id, spare_part_qty, price, description, sn } = body;
 
-      await db.$queryRaw`UPDATE Spare_parts_request SET "spare_part_id" = ${spare_part_id},"spare_part_qty" = ${spare_part_qty},"price" = ${price}, "description" = ${description}, "sn" = ${sn}`;
+      await db.$queryRaw`UPDATE "Spare_parts_requests" SET "spare_part_id" = ${spare_part_id},"spare_part_qty" = ${spare_part_qty},"price" = ${price}, "description" = ${description}, "sn" = ${sn}`;
 
       return "edit Spare_parts request";
     } catch (error: any) {
@@ -98,11 +98,11 @@ app.post(
 
 app.post(
   "/deleteSparePartsRequest",
-  async ({ body }: { body: Spare_parts_request }) => {
+  async ({ body }: { body: Spare_parts_requests }) => {
     try {
       const { id } = body;
 
-      await db.$queryRaw`DELETE FROM "Spare_parts_request" WHERE "id" = ${id}`;
+      await db.$queryRaw`DELETE FROM "Spare_parts_requests" WHERE "id" = ${id}`;
       return "delete Spare_parts request";
     } catch (error: any) {
       return {
