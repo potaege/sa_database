@@ -85,6 +85,28 @@ app.post(
   }
 );
 
+app.post(
+  "/deleteRequest",
+  async ({ body }: { body: Request }) => {
+    try {
+      const { id } = body;
+
+      await db.$queryRaw`DELETE FROM "Requests" WHERE "id" = ${id}`;
+      return "delete requests successfully";
+    } catch (error: any) {
+      return {
+        error: "Error while delete request",
+        details: error.message,
+      };
+    }
+  },
+  {
+    body: t.Object({
+      id: t.Number(),
+    }),
+  }
+);
+
 app.get("/getByID/:id", async ({ params }) => {
   return await db.$queryRaw`SELECT "id","model","sn","rated","description","warranty","work_id","add_date"
   FROM "Requests" WHERE "id" = ${parseInt(params.id)}`;
