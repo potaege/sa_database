@@ -65,7 +65,6 @@ app.post(
       customer_id: t.Number(),
       address: t.String(),
       province: t.String(),
-      user_id: t.Number(),
     }),
   }
 );
