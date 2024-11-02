@@ -1,5 +1,5 @@
 import { Elysia, t } from "elysia";
-
+import { Prisma } from "@prisma/client";
 import db from "./db";
 
 const app = new Elysia({ prefix: "/works", detail: { tags: ["Work"] } });
@@ -15,48 +15,6 @@ interface Work {
   userID: number;
   add_date: Date;
 }
-app.post(
-  "/createNewWork",
-  async ({ body }: { body: Work }) => {
-    try {
-      const {
-        mail_date,
-        service_date,
-        status = 0, // default value
-        customerID,
-        address,
-        province,
-      } = body;
-
-      const add_date = new Date(); // ใช้ค่า default เป็นวันที่ปัจจุบัน
-
-      await db.$queryRaw`
-        INSERT INTO "Works"
-        ("mail_date", "service_date", "status", "customerID", "address", "province")
-        VALUES (${mail_date}, ${service_date}, ${status}, ${customerID}, ${address}, ${province});
-      `;
-
-      return "Added new work";
-    } catch (error: any) {
-      return {
-        error: "Error while creating work",
-        details: error.message,
-      };
-    }
-  },
-  {
-    body: t.Object({
-      mail_date: t.Date(),
-      service_date: t.Optional(t.Date()),
-      status: t.Optional(t.Number()),
-      userID: t.Optional(t.Number()),
-      customerID: t.Number(),
-      address: t.String(),
-      province: t.String(),
-      add_date: t.Optional(t.Date()),
-    }),
-  }
-);
 
 app.get("getLastWork", async () => {
   return await db.$queryRaw`SELECT "id","mail_date","service_date","status","userID","customerID","address","province","add_date" 
@@ -79,8 +37,13 @@ app.get("/getWorksListNotAssigned", async ({ params }) => {
 });
 
 app.get("/getWorksListByStatus/:status", async ({ params }) => {
-  return await db.$queryRaw`SELECT "id","mail_date","service_date","status","userID","customerID","address","province","add_date" 
-    FROM "Works" WHERE "status" = ${parseInt(params.status)}`;
+  const statusList: number[] = params.status
+    ? params.status.split(",").map(Number)
+    : [];
+  return await db.$queryRaw`
+    SELECT "id","mail_date","service_date","status","userID","customerID","address","province","add_date"
+    FROM "Works"
+    WHERE "status" IN (${Prisma.join(statusList)})`;
 });
 
 app.post(
@@ -157,4 +120,46 @@ app.post(
   }
 );
 
+app.post(
+  "/createNewWork",
+  async ({ body }: { body: Work }) => {
+    try {
+      const {
+        mail_date,
+        service_date,
+        status = 0, // default value
+        customerID,
+        address,
+        province,
+      } = body;
+
+      const add_date = new Date(); // ใช้ค่า default เป็นวันที่ปัจจุบัน
+
+      await db.$queryRaw`
+        INSERT INTO "Works"
+        ("mail_date", "service_date", "status", "customerID", "address", "province")
+        VALUES (${mail_date}, ${service_date}, ${status}, ${customerID}, ${address}, ${province});
+      `;
+
+      return "Added new work";
+    } catch (error: any) {
+      return {
+        error: "Error while creating work",
+        details: error.message,
+      };
+    }
+  },
+  {
+    body: t.Object({
+      mail_date: t.Date(),
+      service_date: t.Optional(t.Date()),
+      status: t.Optional(t.Number()),
+      userID: t.Optional(t.Number()),
+      customerID: t.Number(),
+      address: t.String(),
+      province: t.String(),
+      add_date: t.Optional(t.Date()),
+    }),
+  }
+);
 export default app;

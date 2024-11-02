@@ -77,6 +77,8 @@ model AdditionalCosts {
   workID      Int
   description String   @easy_service.VarChar(100)
   cost        Float
+  amount      Int
+  unit        String   @easy_service.VarChar(10)
   add_date    DateTime @default(now())
 
   work_id Works @relation(fields: [workID], references: [id])
@@ -94,7 +96,7 @@ model Requests {
   workID      Int
   add_date    DateTime @default(now())
 
-  work_id              Works                  @relation(fields: [workID], references: [id])
+  work_id              Works                  @relation(fields: [workID], references: [id], onDelete: Cascade)
   Spare_parts_requests Spare_parts_requests[]
 
   @@index([workID])

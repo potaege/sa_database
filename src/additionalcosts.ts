@@ -44,7 +44,6 @@ app.post(
       amount: t.Number(),
       unit: t.String(),
       work_id: t.Number(),
-      add_date: t.Date(),
     }),
   }
 );

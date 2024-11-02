@@ -17,7 +17,7 @@ app.post("/deleteRequest", async ({ body }: { body: Request }) => {
   try {
     const { id } = body;
 
-    await db.$queryRaw`DELETE FROM "Requests" WHERE id = "${id}";`;
+    await db.$queryRaw`DELETE FROM "Requests" WHERE id = ${id};`;
   } catch (error: any) {
     return {
       error: "error while delete Requests",
@@ -31,8 +31,10 @@ app.post(
     try {
       const { id, model, sn, rated, description } = body;
 
-      await db.$queryRaw`UPDATE "Requests" SET "model" = ${model}, "sn" = ${sn}, "rated" = ${rated}, "description" = ${description},  
+      await db.$queryRaw`UPDATE "Requests" SET "model" = ${model}, "sn" = ${sn}, "rated" = ${rated}, "description" = ${description}  
       WHERE "id" = ${id}`;
+
+      return "edit request successfully";
     } catch (error: any) {
       return {
         error: "error while edit Requests",
@@ -47,9 +49,6 @@ app.post(
       sn: t.String(),
       rated: t.String(),
       description: t.String(),
-      warranty: t.Boolean(),
-      workID: t.String(),
-      add_date: t.Date(),
     }),
   }
 );
