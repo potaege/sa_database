@@ -15,7 +15,7 @@ model Users {
   salt     String   @easy_service.VarChar(16)
   name     String   @easy_service.VarChar(20)
   surname  String   @easy_service.VarChar(20)
-  address  String?  @easy_service.VarChar(50)
+  address  String?  @easy_service.VarChar(100)
   province String   @easy_service.VarChar(20)
   role     String   @easy_service.VarChar(20)
   add_date DateTime @default(now())
@@ -43,7 +43,7 @@ model Customers {
   id           Int      @id @default(autoincrement())
   name         String   @easy_service.VarChar(30)
   credit_limit Float
-  address      String?  @easy_service.VarChar(50)
+  address      String?  @easy_service.VarChar(100)
   tax_id       String?  @easy_service.VarChar(15)
   tel          String   @easy_service.VarChar(12)
   province     String   @easy_service.VarChar(20)
@@ -53,15 +53,13 @@ model Customers {
 }
 
 model Works {
-  id           Int       @id @default(autoincrement())
-  user_id      Int?
-  customer_id  Int
-  mail_date    DateTime  @default(now())
-  service_date DateTime? @easy_service.Date
-  status       Int       @default(0)
-  address      String    @easy_service.VarChar(50)
-  province     String    @easy_service.VarChar(20)
-  add_date     DateTime  @default(now())
+  id          Int      @id @default(autoincrement())
+  user_id     Int?
+  customer_id Int
+  status      Int      @default(0)
+  address     String   @easy_service.VarChar(100)
+  province    String   @easy_service.VarChar(20)
+  add_date    DateTime @default(now())
 
   user            Users?            @relation(fields: [user_id], references: [id])
   customer        Customers         @relation(fields: [customer_id], references: [id])
