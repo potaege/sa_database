@@ -9,7 +9,7 @@ const app = new Elysia({
 
 interface Transaction_log {
   id: number;
-  sparePart_id: number;
+  spare_part_id: number;
   quantity: number;
   user_id: number;
   from_user_id: number;
@@ -18,12 +18,12 @@ interface Transaction_log {
 }
 
 app.get("/getList", async ({ params }) => {
-  return await db.$queryRaw`SELECT "id","sparePart_id","quantity","user_id","from_user_id","status","add_date" 
+  return await db.$queryRaw`SELECT "id","spare_part_id","quantity","user_id","from_user_id","status","add_date" 
   FROM "Transaction_logs"`;
 });
 
 app.get("/getList/:id", async ({ params }) => {
-  return await db.$queryRaw`SELECT "id","sparePart_id","quantity","user_id","from_user_id","status","add_date" 
+  return await db.$queryRaw`SELECT "id","spare_part_id","quantity","user_id","from_user_id","status","add_date" 
   FROM "Transaction_logs"
   WHERE "id" = ${params.id}`;
 });
@@ -32,9 +32,9 @@ app.post(
   "/insertTransactionLog",
   async ({ body }: { body: Transaction_log }) => {
     try {
-      const { sparePart_id, quantity, user_id, from_user_id } = body;
-      await db.$queryRaw`INSERT INTO "Transaction_logs" ("sparePart_id","quantity","user_id","from_user_id","status") 
-      VALUES $ {sparePart_id}, ${quantity}, ${user_id}, ${from_user_id}`;
+      const { spare_part_id, quantity, user_id, from_user_id } = body;
+      await db.$queryRaw`INSERT INTO "Transaction_logs" ("spare_part_id","quantity","user_id","from_user_id","status") 
+      VALUES $ {spare_part_id}, ${quantity}, ${user_id}, ${from_user_id}`;
       return { message: "Transaction Log inserted successfully." };
     } catch (error: any) {
       return {
@@ -45,7 +45,7 @@ app.post(
   },
   {
     body: t.Object({
-      sparePart_id: t.Number(),
+      spare_part_id: t.Number(),
       quantity: t.Number(),
       user_id: t.Number(),
       from_user_id: t.Number(),

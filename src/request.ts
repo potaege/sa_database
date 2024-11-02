@@ -10,7 +10,7 @@ interface Request {
   rated: string;
   description: string;
   warranty: boolean;
-  workID: number;
+  work_id: number;
   add_date: Date;
 }
 app.post("/deleteRequest", async ({ body }: { body: Request }) => {
@@ -57,12 +57,12 @@ app.post(
   "/insertRequest",
   async ({ body }: { body: Request }) => {
     try {
-      const { model, sn, rated, description, warranty, workID } = body;
+      const { model, sn, rated, description, warranty, work_id } = body;
 
       await db.$queryRaw`
         INSERT INTO "Requests"
-        ("model", "sn", "rated", "description", "warranty", "workID" )
-        VALUES (${model}, ${sn}, ${rated}, ${description}, ${warranty}, ${workID} );
+        ("model", "sn", "rated", "description", "warranty", "work_id" )
+        VALUES (${model}, ${sn}, ${rated}, ${description}, ${warranty}, ${work_id} );
       `;
 
       return "Request added successfully";
@@ -80,24 +80,24 @@ app.post(
       rated: t.String(),
       description: t.String(),
       warranty: t.Boolean(),
-      workID: t.Number(),
+      work_id: t.Number(),
     }),
   }
 );
 
 app.get("/getByID/:id", async ({ params }) => {
-  return await db.$queryRaw`SELECT "id","model","sn","rated","description","warranty","workID","add_date"
+  return await db.$queryRaw`SELECT "id","model","sn","rated","description","warranty","work_id","add_date"
   FROM "Requests" WHERE "id" = ${parseInt(params.id)}`;
 });
 
 app.get("/getList", async () => {
-  return await db.$queryRaw`SELECT "id","model","sn","rated","description","warranty","workID","add_date"
+  return await db.$queryRaw`SELECT "id","model","sn","rated","description","warranty","work_id","add_date"
   FROM "Requests"`;
 });
 
-app.get("/getListByWorkID/:workID", async ({ params }) => {
-  return await db.$queryRaw`SELECT "id","model","sn","rated","description","warranty","workID","add_date"
-  FROM "Requests" WHERE "workID" = ${parseInt(params.workID)}`;
+app.get("/getListBywork_id/:work_id", async ({ params }) => {
+  return await db.$queryRaw`SELECT "id","model","sn","rated","description","warranty","work_id","add_date"
+  FROM "Requests" WHERE "work_id" = ${parseInt(params.work_id)}`;
 });
 
 // TODO List
