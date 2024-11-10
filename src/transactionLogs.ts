@@ -12,29 +12,33 @@ interface Transaction_log {
   spare_part_id: number;
   quantity: number;
   user_id: number;
-  from_user_id: number;
+  fromuser_id: number;
   status: number;
   add_date: Date;
 }
 
 app.get("/getList", async ({ params }) => {
-  return await db.$queryRaw`SELECT "id","spare_part_id","quantity","user_id","from_user_id","status","add_date" 
+  return await db.$queryRaw`SELECT "id","spare_part_id","quantity","user_id","fromuser_id","status","add_date" 
   FROM "Transaction_logs"`;
 });
 
 app.get("/getList/:id", async ({ params }) => {
-  return await db.$queryRaw`SELECT "id","spare_part_id","quantity","user_id","from_user_id","status","add_date" 
+  return await db.$queryRaw`SELECT "id","spare_part_id","quantity","user_id","fromuser_id","status","add_date" 
   FROM "Transaction_logs"
   WHERE "id" = ${params.id}`;
 });
-
 app.post(
   "/insertTransactionLog",
   async ({ body }: { body: Transaction_log }) => {
     try {
-      const { spare_part_id, quantity, user_id, from_user_id } = body;
-      await db.$queryRaw`INSERT INTO "Transaction_logs" ("spare_part_id","quantity","user_id","from_user_id","status") 
-      VALUES $ {spare_part_id}, ${quantity}, ${user_id}, ${from_user_id}`;
+      const { spare_part_id, quantity, user_id, fromuser_id } = body;
+
+      // Use Prisma's recommended way to safely interpolate variables
+      await db.$queryRaw`
+        INSERT INTO "Transaction_logs" ("spare_part_id", "quantity", "user_id", "fromuser_id")
+        VALUES (${spare_part_id}, ${quantity}, ${user_id}, ${fromuser_id})
+      `;
+
       return { message: "Transaction Log inserted successfully." };
     } catch (error: any) {
       return {
@@ -48,7 +52,7 @@ app.post(
       spare_part_id: t.Number(),
       quantity: t.Number(),
       user_id: t.Number(),
-      from_user_id: t.Number(),
+      fromuser_id: t.Number(),
     }),
   }
 );
