@@ -26,7 +26,8 @@ app.get("/getListInRequest/:request_id", async ({ params }) => {
       "Spare_parts"."price", 
       "Spare_parts"."name",
       "Spare_parts"."unit",
-      "Spare_parts_requests"."description", 
+      "Spare_parts_requests"."description",
+      "Spare_parts_requests"."sn",
       "Spare_parts_requests"."add_date"
     FROM "Spare_parts_requests"
     JOIN "Spare_parts" ON "Spare_parts_requests"."spare_part_id" = "Spare_parts"."id"
