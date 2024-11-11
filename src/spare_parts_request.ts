@@ -17,16 +17,25 @@ const app = new Elysia({
 });
 
 app.get("/getListInRequest/:request_id", async ({ params }) => {
-  return await db.$queryRaw`SELECT Spare_parts_requests.id, Spare_parts_requests.request_id,Spare_parts_requests.name, Spare_parts_requests.spare_parts_qty,Spare_parts.price,Spare_parts_requests.description, Spare_parts_requests.add_date
-  FROM Spare_parts_requests
-  JOIN Spare_parts ON Spare_parts_requests.spare_part_id = Spare_parts.id
-  WHERE Spare_parts_requests.request_id IN (SELECT request_id FROM Requests WHERE request_id = ${parseInt(
-    params.request_id
-  )})`;
+  return await db.$queryRaw`
+    SELECT 
+      "Spare_parts_requests"."id", 
+      "Spare_parts_requests"."request_id",
+      "Spare_parts_requests"."spare_part_id", 
+      "Spare_parts_requests"."spare_parts_qty",
+      "Spare_parts"."price", 
+      "Spare_parts"."name",
+      "Spare_parts"."unit",
+      "Spare_parts_requests"."description", 
+      "Spare_parts_requests"."add_date"
+    FROM "Spare_parts_requests"
+    JOIN "Spare_parts" ON "Spare_parts_requests"."spare_part_id" = "Spare_parts"."id"
+    WHERE "Spare_parts_requests"."request_id" = ${parseInt(params.request_id)}
+  `;
 });
 
 app.get("/getById/:id", async ({ params }) => {
-  return await db.$queryRaw`SELECT "id","request_id", "spare_parts_id", "spare_parts_qty","description","add_date","sn" FROM "Spare_parts_requests" WHERE id = ${parseInt(
+  return await db.$queryRaw`SELECT "id","request_id", "spare_part_id", "spare_parts_qty","description","add_date","sn" FROM "Spare_parts_requests" WHERE id = ${parseInt(
     params.id
   )}`;
 });
