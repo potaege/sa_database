@@ -74,9 +74,10 @@ app.post(
   "/editSparePartsRequest",
   async ({ body }: { body: Spare_parts_requests }) => {
     try {
-      const { spare_part_id, spare_parts_qty, description, sn } = body;
+      const { spare_part_id, spare_parts_qty, description, sn, id } = body;
 
-      await db.$queryRaw`UPDATE "Spare_parts_requests" SET "spare_part_id" = ${spare_part_id},"spare_parts_qty" = ${spare_parts_qty}, "description" = ${description}, "sn" = ${sn}`;
+      await db.$queryRaw`UPDATE "Spare_parts_requests" SET "spare_part_id" = ${spare_part_id},"spare_parts_qty" = ${spare_parts_qty}, "description" = ${description}, "sn" = ${sn}
+      WHERE "id" = ${id}`;
 
       return "edit Spare_parts request";
     } catch (error: any) {
