@@ -135,7 +135,7 @@ app.post(
         body;
       const salt = generateSalt();
       const hashed = encryptWithSalt(password, salt);
-      await db.$queryRaw`UPDATE "Users" SET "username" = ${username}, "password" = ${password},"name" = ${name},"surname" = ${surname},"address" = ${address},"province" = ${province},"role" = ${role}
+      await db.$queryRaw`UPDATE "Users" SET "username" = ${username}, "password" = ${hashed},"salt" = ${salt},"name" = ${name},"surname" = ${surname},"address" = ${address},"province" = ${province},"role" = ${role}
     WHERE "id" = ${id}`;
 
       return "editing users data";
