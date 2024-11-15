@@ -133,7 +133,8 @@ app.post(
     try {
       const { id, username, password, name, surname, address, province, role } =
         body;
-
+      const salt = generateSalt();
+      const hashed = encryptWithSalt(password, salt);
       await db.$queryRaw`UPDATE "Users" SET "username" = ${username}, "password" = ${password},"name" = ${name},"surname" = ${surname},"address" = ${address},"province" = ${province},"role" = ${role}
     WHERE "id" = ${id}`;
 
