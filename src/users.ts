@@ -33,7 +33,7 @@ const encryptWithSalt = (data: string, salt: string): string => {
 };
 
 app.get("/searchbyID/:id", async ({ params }) => {
-  return await db.$queryRaw`SELECT "id","username","name","surname","address","province","role","add_date" FROM "Users" WHERE "id" = ${parseInt(
+  return await db.$queryRaw`SELECT "id","username","password","name","surname","address","province","role","add_date" FROM "Users" WHERE "id" = ${parseInt(
     params.id
   )};`;
 });

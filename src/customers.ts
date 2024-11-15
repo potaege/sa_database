@@ -29,7 +29,6 @@ app.get("/getByID/:id", async ({ params }) => {
 app.get("/getIDbyName/:name", async ({ params }) => {
   var re = /%20/g;
   var name = params.name.replace(re, " ");
-  console.log(name);
 
   return await db.$queryRaw`
     SELECT "id" FROM "Customers" WHERE "name" LIKE '%' || ${name} || '%'
