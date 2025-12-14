@@ -11,7 +11,7 @@ DATABASE_URL="postgresql://postgres:password@localhost:5433/easy_service"  ## pa
 ## Development
 To start the development server run:
 ```bash
-bun run dev
+npm run dev
 ```
 
 Open http://localhost:3000/ with your browser to see the result.
