@@ -1,8 +1,12 @@
 # Elysia with Bun runtime
 
 ## Getting Started
-make file .env 
-DATABASE_URL="postgresql://postgres:password@localhost:5433/easy_service"
+1. npm install
+   
+2. make file .env 
+DATABASE_URL="postgresql://postgres:password@localhost:5433/easy_service"  ## password(postgres) 
+
+3.npx prisma migrate dev
 
 ## Development
 To start the development server run:
