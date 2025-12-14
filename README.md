@@ -1,7 +1,7 @@
 # Elysia with Bun runtime
 
 ## Getting Started
-1. npm install
+1. bun install
    
 2. make file .env 
 DATABASE_URL="postgresql://postgres:password@localhost:5433/easy_service"  ## password(postgres) 
