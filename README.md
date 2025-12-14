@@ -1,10 +1,8 @@
 # Elysia with Bun runtime
 
 ## Getting Started
-To get started with this template, simply paste this command into your terminal:
-```bash
-bun create elysia ./elysia-example
-```
+make file .env 
+DATABASE_URL="postgresql://postgres:password@localhost:5433/easy_service"
 
 ## Development
 To start the development server run:
